@@ -8,30 +8,30 @@ import  TaskAssignee  from "./TaskAssignee.js";
 // User <--> Workspace
 User.belongsToMany(Workspace, {
   through: WorkspaceMember,
-  foreignKey: "user_id"
+  foreignKey: "userId"
 });
 
 Workspace.belongsToMany(User, {
   through: WorkspaceMember,
-  foreignKey: "workspace_id"
+  foreignKey: "workspaceId"
 });
 
 // Workspace --> Board
-Workspace.hasMany(Board, { foreignKey: "workspace_id" });
-Board.belongsTo(Workspace, { foreignKey: "workspace_id" });
+Workspace.hasMany(Board, { foreignKey: "workspaceId" });
+Board.belongsTo(Workspace, { foreignKey: "workspaceId" });
 
 // Board --> Task
-Board.hasMany(Task, { foreignKey: "board_id" });
-Task.belongsTo(Board, { foreignKey: "board_id" });
+Board.hasMany(Task, { foreignKey: "boardId" });
+Task.belongsTo(Board, { foreignKey: "boardId" });
 
 // Task <--> User
 Task.belongsToMany(User, {
     through: TaskAssignee,
-  foreignKey: "task_id"
+  foreignKey: "taskId"
 });
 User.belongsToMany(Task, {
     through: TaskAssignee,
-  foreignKey: "user_id"
+  foreignKey: "userId"
 });
 
 

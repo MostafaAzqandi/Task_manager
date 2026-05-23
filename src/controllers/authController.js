@@ -15,8 +15,7 @@ class AuthController {
       req.session.userId = user.id;
       res.json({ message: "User registered successfully" });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ error: "An error occurred during registration" });
+      next(error);
     }
   }
   async login(req, res) {
@@ -36,8 +35,7 @@ class AuthController {
       req.session.userId = user.id;
       res.json({ message: `Wellcome ${user.fullName}` });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ error: "An error occurred during registration" });
+      next(error);
     }
   }
 }
