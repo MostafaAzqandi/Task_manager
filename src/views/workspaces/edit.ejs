@@ -1,0 +1,64 @@
+<!-- views/workspaces/edit.ejs -->
+
+<%- include("../partials/header") %>
+
+<%- include("../partials/sidebar") %>
+
+<main class="main-content">
+
+  <div class="form-container">
+
+    <div class="form-header">
+
+      <h1>
+        Edit Workspace
+      </h1>
+
+      <p>
+        Update workspace information
+      </p>
+
+    </div>
+
+    <form action="#" method="POST">
+
+      <div class="form-group">
+
+        <label>
+          Workspace Title
+        </label>
+
+        <input
+          type="text"
+          name="title"
+          value="Startup Project"
+          placeholder="Workspace title"
+        >
+
+      </div>
+
+      <div class="form-actions">
+
+        <button
+          type="submit"
+          class="primary-btn"
+        >
+          Save Changes
+        </button>
+
+        <a
+          href="#"
+          class="secondary-btn"
+        >
+          Cancel
+        </a>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</main>
+
+<%- include("../partials/footer") %>

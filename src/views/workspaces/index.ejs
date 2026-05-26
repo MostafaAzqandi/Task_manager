@@ -1,0 +1,65 @@
+<!-- views/workspaces/index.ejs -->
+
+<%- include("../partials/header") %>
+
+  <%- include("../partials/sidebar") %>
+
+    <main class="main-content">
+
+      <div class="page-header">
+
+        <div>
+          <h1 class="page-title">
+            Your Workspaces
+          </h1>
+
+          <p class="page-subtitle">
+            Manage your projects and teams
+          </p>
+        </div>
+
+        <a href="/workspaces/new" class="primary-btn">
+          + New Workspace
+        </a>
+
+      </div>
+
+      <section class="workspace-grid">
+        <% workspaces.forEach(workspace=> { %>
+          <div class="workspace-card">
+
+            <div class="workspace-top">
+
+              <h2>
+                <%= workspace.title %>
+              </h2>
+
+              <span class="workspace-role">
+                <%= workspace.WorkspaceMember.role %>
+              </span>
+
+            </div>
+
+            <p class="workspace-description">
+              <%= workspace.description || "No description" %>
+            </p>
+
+            <div class="workspace-footer">
+
+              <span>
+                <%= workspace.Boards.length %> Boards
+              </span>
+
+              <a href="/workspaces/<%= workspace.id %>">
+                Open →
+              </a>
+
+            </div>
+
+          </div>
+          <% }) %>
+      </section>
+
+    </main>
+
+    <%- include("../partials/footer") %>

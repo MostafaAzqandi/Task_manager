@@ -1,9 +1,9 @@
-import  User  from "./User.js";
-import  Workspace  from "./Workspace.js";
-import  WorkspaceMember  from "./WorkspaceMember.js";
-import  Board  from "./Board.js";
-import  Task  from "./Task.js";
-import  TaskAssignee  from "./TaskAssignee.js";
+import User from "./User.js";
+import Workspace from "./Workspace.js";
+import WorkspaceMember from "./WorkspaceMember.js";
+import Board from "./Board.js";
+import Task from "./Task.js";
+import TaskAssignee from "./TaskAssignee.js";
 
 // User <--> Workspace
 User.belongsToMany(Workspace, {
@@ -26,20 +26,17 @@ Task.belongsTo(Board, { foreignKey: "boardId" });
 
 // Task <--> User
 Task.belongsToMany(User, {
-    through: TaskAssignee,
-  foreignKey: "taskId"
+  through: TaskAssignee,
+  foreignKey: "taskId",
+  as: "assignees"
 });
 User.belongsToMany(Task, {
-    through: TaskAssignee,
-  foreignKey: "userId"
+  through: TaskAssignee,
+  foreignKey: "userId",
+  as: "assignedTasks"
 });
 
+User.hasMany(Task, { foreignKey: "createdBy", as: "createdTasks" });
+Task.belongsTo(User, { foreignKey: "createdBy", as: "creator" });
 
-export  {
-    User,
-    Workspace,
-    WorkspaceMember,
-    Board,
-    Task,
-    TaskAssignee
-}
+export { User, Workspace, WorkspaceMember, Board, Task, TaskAssignee };

@@ -1,18 +1,27 @@
 import express from "express";
-import authMiddleware from "../middlewares/authMiddleware.js";
 import WorkspaceController from "../controllers/workspaceController.js";
-import workspaceMemberMiddleware from "../middlewares/workspaceMemberMiddleware.js";
+import { authMiddleware, workspaceAccessMiddleware } from "../middlewares/index.js";
 
 const router = express.Router();
 
-router.post("/",authMiddleware, WorkspaceController.createWorkspace);
-router.get("/",authMiddleware, WorkspaceController.getWorkspaces);
-router.get("/:workspaceId",authMiddleware, workspaceMemberMiddleware, async (req, res) => {
-    res.json({
-        message: "Workspace access granted."
-    })
-});
+router.post("/", authMiddleware, WorkspaceController.createWorkspace);
+router.get(
+  "/new",
+  authMiddleware,
+  WorkspaceController.createWorkspacePage,
+);
+router.get(
+  "/:workspaceId",
+  authMiddleware,
+  workspaceAccessMiddleware,
+  WorkspaceController.getWorkspacePage,
+);
 
+router.get(
+  "/",
+  authMiddleware,
+  WorkspaceController.getWorkspacesPage,
+);
 
 
 

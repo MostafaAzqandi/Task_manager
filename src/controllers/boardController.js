@@ -1,11 +1,11 @@
-import { Board } from "../models/index.js";
+import { Board, Workspace } from "../models/index.js";
 
 class BoardController {
-  async createBoard(req, res) {
+  async createBoard(req, res, next) {
     try {
       const board = await Board.create({
         title: req.body.title,
-        workspaceId: req.params.workspaceId,
+        workspaceId: req.workspace.id,
         createdBy: req.user.id,
       });
 
@@ -14,11 +14,11 @@ class BoardController {
       next(error);
     }
   }
-  async getBoards(req, res) {
+  async getBoards(req, res, next) {
     try {
       const boards = await Board.findAll({
         where: {
-          workspaceId: req.params.workspaceId,
+          workspaceId: req.workspace.id,
         },
       });
       res.json(boards);
@@ -26,20 +26,20 @@ class BoardController {
       next(error);
     }
   }
-  async getBoard(req, res) {
+  async getBoard(req, res, next) {
     try {
-      const board = await Board.findOne({
-        where: {
-          id: req.params.boardId,
-          workspaceId: req.params.workspaceId,
-        },
-      });
-      if (!board) {
-        return res.status(404).json({
-          error: "Board not found",
-        });
-      }
-      res.json(board);
+      res.json(req.board);
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getBoardPage(req, res, next) {
+    try {
+      const workspace = req.workspace;
+      const board = req.board;
+      const tasks = await board.getTasks();
+      const taskCount = await board.countTasks()
+      res.render("boards/show", { workspace, board, tasks, taskCount });
     } catch (error) {
       next(error);
     }

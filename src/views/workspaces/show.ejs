@@ -1,0 +1,86 @@
+<!-- views/workspaces/show.ejs -->
+
+<%- include("../partials/header") %>
+
+<%- include("../partials/sidebar") %>
+
+<main class="main-content">
+
+  <div class="workspace-banner">
+
+    <div>
+
+      <h1 class="workspace-title">
+        <%= workspace.title %>
+      </h1>
+
+      <p class="workspace-meta">
+        <%= boards.length %> Boards • <%= memberCount %> Members
+      </p>
+
+    </div>
+
+    <div class="workspace-actions">
+
+      <a
+        href="#"
+        class="secondary-btn"
+      >
+        Edit Workspace
+      </a>
+
+      <button class="danger-btn">
+        Delete
+      </button>
+
+    </div>
+
+  </div>
+
+  <section class="boards-section">
+
+    <div class="section-header">
+
+      <h2>
+        Boards
+      </h2>
+
+      <a href="#" class="primary-btn">
+        + New Board
+      </a>
+
+    </div>
+
+    <div class="boards-grid">
+      <% boards.forEach(board => { %>
+      <div class="board-card">
+
+        <h3>
+          <%= board.title %>
+        </h3>
+
+        <p>
+          <%= board.description || "No description" %>
+        </p>
+
+        <div class="board-footer">
+
+          <span>
+            <%= board.Tasks.length %> Tasks
+          </span>
+
+          <a href="/workspaces/<%= workspace.id %>/boards/<%= board.id %>">
+            Open →
+          </a>
+
+        </div>
+
+      </div>
+      <% }) %>
+    </div>
+
+  </section>
+
+</main>
+
+<%- include("../partials/footer") %>
