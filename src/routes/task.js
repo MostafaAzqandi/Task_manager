@@ -55,5 +55,14 @@ router.post(
   taskAccessMiddleware,
   TaskController.assignTask,
 );
+router.get(
+  "/:taskId/edit",
+  authMiddleware,
+  workspaceAccessMiddleware,
+  boardAccessMiddleware,
+  taskAccessMiddleware,
+  TaskController.getTaskEditPage,
+);
+
 
 export default router;

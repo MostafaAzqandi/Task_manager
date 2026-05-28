@@ -7,11 +7,13 @@ const TaskAssignee = sequelize.define(
     taskId: {
         type: DataTypes.INTEGER,
         allowNull:false,
+        notEmpty: true
         // field: "task_id"
     },
     userId: {
         type: DataTypes.INTEGER,
         allowNull:false,
+        notEmpty: true
         // field: "user_id"
     }
   },

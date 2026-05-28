@@ -6,11 +6,13 @@ const Workspace = sequelize.define(
   {
     title: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      notEmpty: true
     },
     createdBy: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      notEmpty: true
       // field: "created_by"
     }
   },

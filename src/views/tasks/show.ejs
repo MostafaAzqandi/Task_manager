@@ -2,149 +2,158 @@
 
 <%- include("../partials/header") %>
 
-<%- include("../partials/sidebar") %>
+  <%- include("../partials/sidebar") %>
 
-<main class="main-content">
+    <main class="main-content">
 
-  <div class="task-page">
+      <div class="task-page">
 
-    <div class="task-main-card">
+        <div class="task-main-card">
 
-      <div class="task-header">
+          <div class="task-header">
 
-        <div>
+            <div>
 
-          <h1 class="single-task-title">
-            <%= task.title %>
-          </h1>
+              <h1 class="single-task-title">
+                <%= task.title %>
+              </h1>
 
-          <p class="single-task-meta">
-            <%= board.title %> • <%= workspace.title %>
-          </p>
+              <p class="single-task-meta">
+                <%= board.title %> • <%= workspace.title %>
+              </p>
 
-        </div>
-
-        <span class="task-status status-progress">
-          <%= task.status %>
-        </span>
-
-      </div>
-
-      <div class="task-section">
-
-        <h3>
-          Description
-        </h3>
-
-        <p class="single-task-description">
-          <%= task.description %>
-        </p>
-
-      </div>
-
-      <div class="task-details-grid">
-
-        <div class="task-detail-box">
-
-          <span class="detail-label">
-            Priority
-          </span>
-
-          <span class="task-priority high-priority">
-            High
-          </span>
-
-        </div>
-
-        <div class="task-detail-box">
-
-          <span class="detail-label">
-            Due Date
-          </span>
-
-          <span class="detail-value">
-            June 5, 2026
-          </span>
-
-        </div>
-
-        <div class="task-detail-box">
-
-          <span class="detail-label">
-            Created By
-          </span>
-
-          <span class="detail-value">
-            <%= task.creator.fullName %>
-          </span>
-
-        </div>
-
-      </div>
-
-      <div class="task-actions">
-
-        <a
-          href="#"
-          class="secondary-btn"
-        >
-          Edit Task
-        </a>
-
-        <button class="danger-btn">
-          Delete Task
-        </button>
-
-      </div>
-
-    </div>
-
-    <aside class="task-sidebar">
-
-      <div class="assigned-card">
-
-        <div class="assigned-header">
-
-          <h3>
-            Assigned Users
-          </h3>
-
-          <button class="primary-btn small-btn">
-            +
-          </button>
-
-        </div>
-
-        <ul class="assigned-list">
-
-          <li class="assigned-user">
-            <div class="avatar">
-              M
             </div>
 
-            <span>
-              Mosi
+            <span class="task-status status-progress">
+              <%= task.status %>
             </span>
-          </li>
 
-          <li class="assigned-user">
-            <div class="avatar">
-              S
+          </div>
+
+          <div class="task-section">
+
+            <h3>
+              Description
+            </h3>
+
+            <p class="single-task-description">
+              <%= task.description %>
+            </p>
+
+          </div>
+
+          <div class="task-details-grid">
+
+            <div class="task-detail-box">
+
+              <span class="detail-label">
+                Priority
+              </span>
+
+              <span class="task-priority <%= task.priority %>-priority">
+                <%= task.priority %>
+              </span>
+
             </div>
 
-            <span>
-              Sarah
-            </span>
-          </li>
+            <div class="task-detail-box">
 
-        </ul>
+              <span class="detail-label">
+                Due Date
+              </span>
+
+              <span class="detail-value">
+                June 5, 2026
+              </span>
+
+            </div>
+
+            <div class="task-detail-box">
+
+              <span class="detail-label">
+                Created By
+              </span>
+
+              <span class="detail-value">
+                <%= task.creator.fullName %>
+              </span>
+
+            </div>
+
+          </div>
+
+          <div class="task-actions">
+
+            <a href="/workspaces/<%= workspace.id %>/boards/<%= board.id %>/tasks/<%= task.id %>/edit"
+              class="secondary-btn">
+              Edit Task
+            </a>
+
+            <button class="danger-btn">
+              Delete Task
+            </button>
+
+          </div>
+
+        </div>
+
+        <aside class="task-sidebar">
+
+          <div class="assigned-card">
+
+            <div class="assigned-header">
+
+              <h3>
+                Assigned Users
+              </h3>
+
+              <form action="<%= routes.task(workspace.id, board.id, task.id) %>/assign" method="POST"
+                class="assign-form">
+
+                <select name="userId" class="assign-select">
+
+                  <% users.forEach(user=> { %>
+
+                    <option value="<%= user.id %>">
+
+                      <%= user.fullName %>
+
+                    </option>
+
+                    <% }) %>
+
+                </select>
+
+                <button type="submit" class="primary-btn small-btn">
+                  +
+                </button>
+
+              </form>
+
+            </div>
+
+            <ul class="assigned-list">
+              <% assignees.forEach(assignee=> { %>
+                <li class="assigned-user">
+                  <div class="avatar">
+                    M
+                  </div>
+
+                  <span>
+                    <%= assignee.fullName %>
+                  </span>
+                </li>
+                <% }) %>
+                  </li>
+
+            </ul>
+
+          </div>
+
+        </aside>
 
       </div>
 
-    </aside>
+    </main>
 
-  </div>
-
-</main>
-
-<%- include("../partials/footer") %>
+    <%- include("../partials/footer") %>

@@ -23,7 +23,7 @@
     <div class="board-actions">
 
       <a
-        href="#"
+        href="<%= routes.board(workspace.id, board.id) %>/edit"
         class="secondary-btn"
       >
         Edit Board
@@ -73,8 +73,8 @@
 
         <div class="task-footer">
 
-          <span class="task-priority high-priority">
-            High
+          <span class="task-priority <%= task.priority %>-priority">
+            <%= task.priority %>
           </span>
 
           <a href="/workspaces/<%= workspace.id %>/boards/<%= board.id %>/tasks/<%= task.id %>">

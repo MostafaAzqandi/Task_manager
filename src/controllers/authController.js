@@ -5,6 +5,9 @@ class AuthController {
   async register(req, res, next) {
     try {
       const { fullName, username, email, password } = req.body;
+      if (!fullName || !username || !email || !password) 
+        return res.status(401).render("auth/register", { error: "All fields are required" });
+
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = await User.create({
         fullName,
@@ -13,7 +16,6 @@ class AuthController {
         password: hashedPassword,
       });
       req.session.userId = user.id;
-      // res.json({ message: "User registered successfully" });
       res.redirect("/auth/login");
     } catch (error) {
       next(error);
@@ -28,10 +30,15 @@ class AuthController {
         },
       });
 
-      if (!user) return res.status(401).render("auth/login", {error: "Invalid credentials"});  //json({ error: "invalid credentials" });
+      if (!user)
+        return res
+          .status(401)
+          .render("auth/login", { error: "Invalid credentials" }); //json({ error: "invalid credentials" });
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch)
-        return res.status(401).render("auth/login", {error: "Invalid credentials"});  //json({ error: "invalid credentials" });
+        return res
+          .status(401)
+          .render("auth/login", { error: "Invalid credentials" }); //json({ error: "invalid credentials" });
 
       req.session.userId = user.id;
       res.redirect("/workspaces");
@@ -50,14 +57,14 @@ class AuthController {
   }
   async loginPage(req, res, next) {
     try {
-      res.render("auth/login", {error: null});
+      res.render("auth/login", { error: null });
     } catch (error) {
       next(error);
     }
   }
   async registerPage(req, res, next) {
     try {
-      res.render("auth/register");
+      res.render("auth/register", {error: null});
     } catch (error) {
       next(error);
     }

@@ -11,7 +11,13 @@ router.post(
   "/",
   authMiddleware,
   workspaceAccessMiddleware,
-  BoardController.createBoard,
+  BoardController.createBoard
+);
+router.get(
+  "/new",
+  authMiddleware,
+  workspaceAccessMiddleware,
+  BoardController.createBoardPage
 );
 // router.get(
 //   "/",
@@ -24,7 +30,21 @@ router.get(
   authMiddleware,
   workspaceAccessMiddleware,
   boardAccessMiddleware,
-  BoardController.getBoardPage,
+  BoardController.getBoardPage
 );
 
+router.get(
+  "/:boardId/edit",
+  authMiddleware,
+  workspaceAccessMiddleware,
+  boardAccessMiddleware,
+  BoardController.getBoardEditPage
+);
+router.patch(
+  "/:boardId",
+  authMiddleware,
+  workspaceAccessMiddleware,
+  boardAccessMiddleware,
+  BoardController.updateBoard
+);
 export default router;

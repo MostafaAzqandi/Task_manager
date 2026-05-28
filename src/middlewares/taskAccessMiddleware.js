@@ -1,4 +1,4 @@
-import AppError from "../errors/AppError.js";
+import AppError from "../utils/AppError.js";
 import { Task } from "../models/index.js";
 
 async function taskAccessMiddleware(req, res, next) {

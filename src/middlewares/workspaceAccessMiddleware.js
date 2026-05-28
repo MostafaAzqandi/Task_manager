@@ -1,4 +1,4 @@
-import AppError from "../errors/AppError.js";
+import AppError from "../utils/AppError.js";
 import { Workspace, WorkspaceMember } from "../models/index.js";
 async function workspaceMemberMiddleware(req, res, next) {
   try {

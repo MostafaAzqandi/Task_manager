@@ -1,5 +1,5 @@
-import { Task } from "../models/index.js";
-import { TaskAssignee, WorkspaceMember, User } from "../models/index.js";
+import { TaskAssignee, WorkspaceMember, User, Task } from "../models/index.js";
+import { routes } from "../utils/routes.js";
 
 class TaskController {
   async createTask(req, res, next) {
@@ -36,16 +36,18 @@ class TaskController {
   async getTaskPage(req, res, next) {
     try {
       const workspace = req.workspace;
+      const users = await workspace.getUsers();
       const board = req.board;
       const task = await Task.findByPk(req.task.id, {
         include: {
           model: User,
           as: "creator"
         }
-        
       });
+      const assignees = await task.getAssignees();
+      console.log(users);
       
-      res.render("tasks/show", { workspace, board, task });
+      res.render("tasks/show", { users, workspace, board, task, assignees, routes });
     } catch (error) {}
   }
   async updateTask(req, res, next) {
@@ -101,12 +103,14 @@ class TaskController {
         userId: req.body.userId,
       });
 
-      res.json({
-        message: "Task assigned",
-      });
+      // res.json({ message: "Task assigned" });
+      res.redirect(routes.task(req.workspace.id, req.board.id, req.task.id));
     } catch (error) {
       next(error);
     }
+  }
+  getTaskEditPage(req, res, next) {
+    res.render("tasks/edit");
   }
 }
 

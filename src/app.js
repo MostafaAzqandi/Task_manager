@@ -2,17 +2,23 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import session from "express-session";
+import methodOverride from "method-override";
 import authRouter from "./routes/auth.js";
 import workspaceRouter from "./routes/workspace.js";
 import boardRouter from "./routes/board.js";
 import taskRouter from "./routes/task.js";
-import { errorHandler, globalMiddleWare, loadUserMiddleware } from "./middlewares/index.js"
+import {
+  errorHandler,
+  globalMiddleWare,
+  loadUserMiddleware,
+} from "./middlewares/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 
+app.use(methodOverride("_method"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -30,11 +36,10 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
-
 app.use("/auth", authRouter);
 app.use("/workspaces", workspaceRouter);
 app.use("/workspaces/:workspaceId/boards", boardRouter);
-app.use("/workspaces/:workspaceId/Boards/:boardId/tasks", taskRouter);
+app.use("/workspaces/:workspaceId/boards/:boardId/tasks", taskRouter);
 
 app.use(errorHandler);
 

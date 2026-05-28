@@ -1,4 +1,4 @@
-<!-- views/boards/edit.ejs -->
+<!-- views/workspaces/create.ejs -->
 
 <%- include("../partials/header") %>
 
@@ -11,17 +11,20 @@
     <div class="form-header">
 
       <h1>
-        Edit Board
+        Create Workspace
       </h1>
 
       <p>
-        Update "<%= board.title %>" board informations
+        Create a new board for <%= workspace.title %>
       </p>
 
     </div>
 
-    <form action="<%= routes.board(workspace.id, board.id) %>?_method=PATCH" method="POST">
-       
+    <form
+      action="/workspaces/<%= workspace.id %>/boards"
+      method="POST"
+    >
+
       <div class="form-group">
 
         <label>
@@ -31,8 +34,7 @@
         <input
           type="text"
           name="title"
-          value="Development Board"
-          placeholder="Board title"
+          placeholder="Enter board title"
         >
 
       </div>
@@ -45,9 +47,9 @@
 
         <textarea
           name="description"
-          rows="5"
-          placeholder="Board description"
-        >Backend and frontend tasks</textarea>
+          rows="6"
+          placeholder="Describe this board"
+        ></textarea>
 
       </div>
 
@@ -57,11 +59,11 @@
           type="submit"
           class="primary-btn"
         >
-          Save Changes
+          Create board
         </button>
 
         <a
-          href="<%= routes.board(workspace.id, board.id) %>"
+          href="/workspaces/<%= workspace.id %>/boards"
           class="secondary-btn"
         >
           Cancel

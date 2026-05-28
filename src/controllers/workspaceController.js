@@ -23,7 +23,8 @@ class WorkspaceController {
       );
       await transaction.commit();
 
-      res.json(workspace);
+      // res.json(workspace);
+      res.redirect("/workspaces");
     } catch (error) {
       if (transaction) {
         await transaction.rollback();

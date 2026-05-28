@@ -6,7 +6,8 @@ const Task = sequelize.define(
   {
     title: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      notEmpty: true
     },
     description: {
         type: DataTypes.TEXT
@@ -14,25 +15,31 @@ const Task = sequelize.define(
     status: {
         type: DataTypes.ENUM("todo", "in_progress", "done"),
         defaultValue:"todo",
-        allowNull: false
+        allowNull: false,
+        notEmpty: true
+    },
+    priority: {
+        type: DataTypes.ENUM("low", "medium", "high"),
+        defaultValue:"medium",
+        allowNull: false,
+        notEmpty: true
     },
     startDate: {
         type: DataTypes.DATE,
-        // field: "start_date"
     },
     expireDate: {
         type: DataTypes.DATE,
-        field: "exp_date"
+        field: "exp_date",
     },
     createdBy:{
         type: DataTypes.INTEGER,
         allowNull:false,
-        // field: "created_by"
+        notEmpty: true
     },
     boardId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      // field: "board_id"
+      notEmpty: true
     }
   },
   {

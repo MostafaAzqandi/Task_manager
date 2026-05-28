@@ -694,3 +694,22 @@ body {
   outline: none;
   border-color: #4f46e5;
 }
+.assign-form {
+
+  display: flex;
+
+  gap: 8px;
+
+  align-items: center;
+
+}
+
+.assign-select {
+
+  padding: 8px 12px;
+
+  border-radius: 8px;
+
+  border: 1px solid #d1d5db;
+
+}

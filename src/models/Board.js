@@ -6,16 +6,19 @@ const Board = sequelize.define(
   {
     title: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      notEmpty: true
     },
     workspaceId:{
         type: DataTypes.INTEGER,
         allowNull:false,
+        notEmpty: true
         // field: "workspace_id"
     },
     createdBy: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      notEmpty: true
       // field: "created_by"
     }
   },
