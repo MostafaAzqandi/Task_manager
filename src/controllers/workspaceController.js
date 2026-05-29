@@ -1,5 +1,6 @@
 import sequelize from "../database/database.js";
 import { Task, Workspace, WorkspaceMember, Board } from "../models/index.js";
+import { routes } from "../utils/routes.js";
 
 class WorkspaceController {
   async createWorkspace(req, res, next) {
@@ -29,6 +30,16 @@ class WorkspaceController {
       if (transaction) {
         await transaction.rollback();
       }
+      next(error);
+    }
+  }
+  async updateWorkspace(req, res, next){
+    try {
+      await req.workspace.update({
+        title: req.body.title
+      });
+      res.redirect(routes.workspace(req.workspace.id));
+    } catch (error) {
       next(error);
     }
   }
@@ -66,7 +77,7 @@ class WorkspaceController {
       const boards = await workspace.getBoards({
         include: [Task]
       });
-      res.render("workspaces/show", { workspace , boards, memberCount});
+      res.render("workspaces/show", { workspace , boards, memberCount, routes});
     } catch (error) {
       next(error);
     }
@@ -74,6 +85,14 @@ class WorkspaceController {
   createWorkspacePage(req, res, next){
     try {
       res.render("workspaces/create");
+    } catch (error) {
+      next(error);
+    }
+  }
+  getWorkspaceEditPage(req, res, next) {
+    try {
+      const workspace = req.workspace;
+      res.render("workspaces/edit", {workspace, routes});
     } catch (error) {
       next(error);
     }

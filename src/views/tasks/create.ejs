@@ -1,0 +1,178 @@
+<!-- views/tasks/create.ejs -->
+
+<%- include("../partials/header") %>
+
+<%- include("../partials/sidebar") %>
+
+<main class="main-content">
+
+  <div class="form-page">
+
+    <div class="form-card">
+
+      <div class="form-header">
+
+        <h1>
+          Create Task
+        </h1>
+
+        <p>
+          <%= board.title %> • <%= workspace.title %>
+        </p>
+
+      </div>
+
+      <% if (error) { %>
+
+        <div class="alert-error">
+
+          <%= error %>
+
+        </div>
+
+      <% } %>
+
+      <form
+        action="/workspaces/<%= workspace.id %>/boards/<%= board.id %>/tasks"
+        method="POST"
+        class="task-form"
+      >
+
+        <div class="form-group">
+
+          <label>
+            Title
+          </label>
+
+          <input
+            type="text"
+            name="title"
+            placeholder="Task title..."
+            required
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            name="description"
+            rows="6"
+            placeholder="Task description..."
+          ></textarea>
+
+        </div>
+
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label>
+              Priority
+            </label>
+
+            <select name="priority">
+
+              <option value="low">
+                Low
+              </option>
+
+              <option value="medium" selected>
+                Medium
+              </option>
+
+              <option value="high">
+                High
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="form-group">
+
+            <label>
+              Status
+            </label>
+
+            <select name="status">
+
+              <option value="todo">
+                Todo
+              </option>
+
+              <option value="in_progress">
+                In Progress
+              </option>
+
+              <option value="done">
+                Done
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+        <div class="form-row">
+
+          <div class="form-group">
+
+            <label>
+              Start Date
+            </label>
+
+            <input
+              type="date"
+              name="startDate"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label>
+              Expire Date
+            </label>
+
+            <input
+              type="date"
+              name="expireDate"
+            >
+
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+
+          <a
+            href="<%= routes.board(workspace.id, board.id) %>"
+            class="secondary-btn"
+          >
+            Cancel
+          </a>
+
+          <button
+            type="submit"
+            class="primary-btn"
+          >
+            Create Task
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</main>
+
+<%- include("../partials/footer") %>

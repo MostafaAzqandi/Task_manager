@@ -15,12 +15,12 @@
       </h1>
 
       <p>
-        Update task information
+        Update "<%= task.title %>" task information
       </p>
 
     </div>
 
-    <form action="#" method="POST">
+    <form action="<%= routes.task(workspace.id, board.id, task.id) %>?_method=PATCH" method="POST">
 
       <div class="form-group">
 
@@ -31,7 +31,7 @@
         <input
           type="text"
           name="title"
-          value="Build Authentication System"
+          value="<%= task.title %>"
           placeholder="Task title"
         >
 
@@ -47,7 +47,7 @@
           name="description"
           rows="6"
           placeholder="Task description"
-        >Implement login and register flow.</textarea>
+        ><%= task.description %></textarea>
 
       </div>
 

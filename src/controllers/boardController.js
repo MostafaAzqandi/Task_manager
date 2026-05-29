@@ -11,7 +11,7 @@ class BoardController {
       });
 
       // res.json(board);
-      res.redirect("/boards");
+      res.redirect(routes.workspace(req.workspace.id));
     } catch (error) {
       next(error);
     }

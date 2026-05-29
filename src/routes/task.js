@@ -17,6 +17,13 @@ router.post(
   TaskController.createTask,
 );
 router.get(
+  "/new",
+  authMiddleware,
+  workspaceAccessMiddleware,
+  boardAccessMiddleware,
+  TaskController.createTaskPage,
+);
+router.get(
   "/",
   authMiddleware,
   workspaceAccessMiddleware,

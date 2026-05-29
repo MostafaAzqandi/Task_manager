@@ -45,7 +45,7 @@
         Tasks
       </h2>
 
-      <a href="#" class="primary-btn">
+      <a href="<%= routes.board(workspace.id, board.id) %>/tasks/new" class="primary-btn">
         + New Task
       </a>
 
@@ -77,7 +77,7 @@
             <%= task.priority %>
           </span>
 
-          <a href="/workspaces/<%= workspace.id %>/boards/<%= board.id %>/tasks/<%= task.id %>">
+          <a href="<%= routes.task(workspace.id, board.id, task.id) %>">
             Open →
           </a>
 

@@ -4,14 +4,21 @@ import { routes } from "../utils/routes.js";
 class TaskController {
   async createTask(req, res, next) {
     try {
-      const task = await Task.create({
-        title: req.body.title,
-        description: req.body.description,
-        boardId: req.params.boardId,
+      const { title, description, priority, status, startDate, expireDate } =
+        req.body;
+      await Task.create({
+        title,
+        description,
+        priority,
+        status,
+        startDate,
+        expireDate,
+        boardId: req.board.id,
         createdBy: req.user.id,
       });
 
-      res.json(task);
+      // res.json(task);
+      res.redirect(routes.board(req.workspace.id, req.board.id));
     } catch (error) {
       next(error);
     }
@@ -41,23 +48,35 @@ class TaskController {
       const task = await Task.findByPk(req.task.id, {
         include: {
           model: User,
-          as: "creator"
-        }
+          as: "creator",
+        },
       });
       const assignees = await task.getAssignees();
       console.log(users);
-      
-      res.render("tasks/show", { users, workspace, board, task, assignees, routes });
+
+      res.render("tasks/show", {
+        users,
+        workspace,
+        board,
+        task,
+        assignees,
+        routes,
+      });
     } catch (error) {}
   }
   async updateTask(req, res, next) {
     try {
+      const {title, description, priority, status , startDate, expireDate} = req.body;
       await req.task.update({
-        title: req.body.title,
-        description: req.body.description,
-        status: req.body.status,
+        title,
+        description,
+        status,
+        priority,
+        startDate,
+        expireDate
       });
-      res.json(req.task);
+      // res.json(req.task);
+      res.redirect(routes.task(req.workspace.id, req.board.id, req.task.id));
     } catch (error) {
       next(error);
     }
@@ -110,7 +129,21 @@ class TaskController {
     }
   }
   getTaskEditPage(req, res, next) {
-    res.render("tasks/edit");
+    try {
+      const workspace = req.workspace;
+      const board = req.board;
+      const task = req.task;
+      res.render("tasks/edit", { workspace, board, task, routes });
+    } catch (error) {
+      next(error);
+    }
+  }
+  createTaskPage(req, res, next) {
+    try {
+      const workspace = req.workspace;
+      const board = req.board;
+      res.render("tasks/create", { workspace, board, routes, error: null });
+    } catch (error) {}
   }
 }
 

@@ -16,6 +16,19 @@ router.get(
   workspaceAccessMiddleware,
   WorkspaceController.getWorkspacePage,
 );
+router.get(
+  "/:workspaceId/edit",
+  authMiddleware,
+  workspaceAccessMiddleware,
+  WorkspaceController.getWorkspaceEditPage,
+);
+
+router.patch(
+  "/:workspaceId",
+  authMiddleware,
+  workspaceAccessMiddleware,
+  WorkspaceController.updateWorkspace,
+);
 
 router.get(
   "/",

@@ -15,12 +15,12 @@
       </h1>
 
       <p>
-        Update workspace information
+        Update "<%= workspace.title %>" workspace information
       </p>
 
     </div>
 
-    <form action="#" method="POST">
+    <form action="<%= routes.workspace(workspace.id) %>?_method=PATCH" method="POST">
 
       <div class="form-group">
 
@@ -31,7 +31,7 @@
         <input
           type="text"
           name="title"
-          value="Startup Project"
+          value="<%= workspace.title %>"
           placeholder="Workspace title"
         >
 
@@ -47,7 +47,7 @@
         </button>
 
         <a
-          href="#"
+          href="<%= routes.workspace(workspace.id) %>"
           class="secondary-btn"
         >
           Cancel
