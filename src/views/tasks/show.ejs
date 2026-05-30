@@ -89,10 +89,13 @@
               Edit Task
             </a>
 
-            <button class="danger-btn">
-              Delete Task
-            </button>
+            <form action="<%= routes.task(workspace.id, board.id, task.id) %>?_method=DELETE" method="POST">
 
+              <button type="submit" class="danger-btn" onclick="return confirm('Delete this task?')">
+                Delete
+              </button>
+
+            </form>
           </div>
 
         </div>

@@ -2,93 +2,94 @@
 
 <%- include("../partials/header") %>
 
-<%- include("../partials/sidebar") %>
+  <%- include("../partials/sidebar") %>
 
-<main class="main-content">
+    <main class="main-content">
 
-  <div class="board-banner">
+      <div class="board-banner">
 
-    <div>
+        <div>
 
-      <h1 class="board-title">
-        <%= board.title %>
-      </h1>
+          <h1 class="board-title">
+            <%= board.title %>
+          </h1>
 
-      <p class="board-meta">
-        <%= taskCount %> Tasks • Workspace: <%= workspace.title %>
-      </p>
-
-    </div>
-
-    <div class="board-actions">
-
-      <a
-        href="<%= routes.board(workspace.id, board.id) %>/edit"
-        class="secondary-btn"
-      >
-        Edit Board
-      </a>
-
-      <button class="danger-btn">
-        Delete Board
-      </button>
-
-    </div>
-
-  </div>
-
-  <section class="tasks-section">
-
-    <div class="section-header">
-
-      <h2>
-        Tasks
-      </h2>
-
-      <a href="<%= routes.board(workspace.id, board.id) %>/tasks/new" class="primary-btn">
-        + New Task
-      </a>
-
-    </div>
-
-    <div class="tasks-grid">
-      <% tasks.forEach(task => { %>
-      <div class="task-card">
-
-        <div class="task-top">
-
-          <h3>
-            <%= task.title %>
-          </h3>
-
-          <span class="task-status status-progress">
-            <%= task.status %>
-          </span>
+          <p class="board-meta">
+            <%= taskCount %> Tasks • Workspace: <%= workspace.title %>
+          </p>
 
         </div>
 
-        <p class="task-description">
-          <%= task.description %>
-        </p>
+        <div class="board-actions">
 
-        <div class="task-footer">
-
-          <span class="task-priority <%= task.priority %>-priority">
-            <%= task.priority %>
-          </span>
-
-          <a href="<%= routes.task(workspace.id, board.id, task.id) %>">
-            Open →
+          <a href="<%= routes.board(workspace.id, board.id) %>/edit" class="secondary-btn">
+            Edit Board
           </a>
+
+          <form action="<%= routes.board(workspace.id, board.id) %>?_method=DELETE" method="POST">
+
+            <button type="submit" class="danger-btn" onclick="return confirm('Delete this board?')">
+              Delete
+            </button>
+
+          </form>
 
         </div>
 
       </div>
-      <% }) %>
-    </div>
 
-  </section>
+      <section class="tasks-section">
 
-</main>
+        <div class="section-header">
 
-<%- include("../partials/footer") %>
+          <h2>
+            Tasks
+          </h2>
+
+          <a href="<%= routes.board(workspace.id, board.id) %>/tasks/new" class="primary-btn">
+            + New Task
+          </a>
+
+        </div>
+
+        <div class="tasks-grid">
+          <% tasks.forEach(task=> { %>
+            <div class="task-card">
+
+              <div class="task-top">
+
+                <h3>
+                  <%= task.title %>
+                </h3>
+
+                <span class="task-status status-progress">
+                  <%= task.status %>
+                </span>
+
+              </div>
+
+              <p class="task-description">
+                <%= task.description %>
+              </p>
+
+              <div class="task-footer">
+
+                <span class="task-priority <%= task.priority %>-priority">
+                  <%= task.priority %>
+                </span>
+
+                <a href="<%= routes.task(workspace.id, board.id, task.id) %>">
+                  Open →
+                </a>
+
+              </div>
+
+            </div>
+            <% }) %>
+        </div>
+
+      </section>
+
+    </main>
+
+    <%- include("../partials/footer") %>
