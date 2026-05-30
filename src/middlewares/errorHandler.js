@@ -3,8 +3,14 @@ function errorHandler(error, req, res, next) {
 
   const status = error.statusCode || 500;
   const message = error.message || "Server Error!";
+
   if (status === 404) {
     return res.status(404).render("errors/404", {
+      error,
+    });
+  }
+  if (status === 401) {
+    return res.status(404).render("errors/401", {
       error,
     });
   }
@@ -16,7 +22,7 @@ function errorHandler(error, req, res, next) {
   }
 
   res.status(500).render("errors/500", {
-    message
+    message,
   });
 }
 

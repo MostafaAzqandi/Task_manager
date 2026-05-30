@@ -84,9 +84,8 @@ class TaskController {
   async deleteTask(req, res, next) {
     try {
       await req.task.destroy();
-      res.json({
-        message: "Task deleted",
-      });
+      // res.json({ message: "Task deleted" });
+      res.redirect(routes.board(req.workspace.id, req.board.id));
     } catch (error) {
       next(error);
     }

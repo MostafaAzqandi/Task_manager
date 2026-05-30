@@ -46,6 +46,15 @@ class BoardController {
       next(error)
     }
   }
+  async deleteBoard(req, res, next) {
+    try {
+      await req.board.destroy();
+      // res.json({ message: "Task deleted" });
+      res.redirect(routes.workspace(req.workspace.id));
+    } catch (error) {
+      next(error);
+    }
+  }
   async createBoardPage(req, res, next) {
     try {
       const workspace = req.workspace;

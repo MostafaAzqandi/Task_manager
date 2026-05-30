@@ -96,3 +96,37 @@
   transform: translateY(-2px);
 
 }
+/* public/css/errors.css */
+
+.error-page {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.error-card {
+  text-align: center;
+  max-width: 500px;
+  padding: 3rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.error-code {
+  font-size: 5rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.error-title {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  margin-bottom: 2rem;
+  color: #666;
+}

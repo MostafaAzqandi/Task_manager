@@ -64,7 +64,7 @@ class AuthController {
   }
   async registerPage(req, res, next) {
     try {
-      res.render("auth/register", {error: null});
+      res.render("auth/register", { error: null });
     } catch (error) {
       next(error);
     }

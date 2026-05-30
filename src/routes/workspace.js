@@ -29,6 +29,12 @@ router.patch(
   workspaceAccessMiddleware,
   WorkspaceController.updateWorkspace,
 );
+router.delete(
+  "/:workspaceId",
+  authMiddleware,
+  workspaceAccessMiddleware,
+  WorkspaceController.deleteWorkspace
+);
 
 router.get(
   "/",

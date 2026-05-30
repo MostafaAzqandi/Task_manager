@@ -47,4 +47,11 @@ router.patch(
   boardAccessMiddleware,
   BoardController.updateBoard
 );
+router.delete(
+  "/:boardId",
+  authMiddleware,
+  workspaceAccessMiddleware,
+  boardAccessMiddleware,
+  BoardController.deleteBoard,
+);
 export default router;

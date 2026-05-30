@@ -43,6 +43,15 @@ class WorkspaceController {
       next(error);
     }
   }
+  async deleteWorkspace(req, res, next) {
+    try {
+      await req.workspace.destroy();
+      // res.json({ message: "Task deleted" });
+      res.redirect("/workspaces");
+    } catch (error) {
+      next(error);
+    }
+  }
   async getWorkspaces(req, res, next) {
     try {
       const workspaces = await req.user.getWorkspaces();
