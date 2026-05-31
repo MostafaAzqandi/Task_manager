@@ -129,3 +129,16 @@ button:hover {
   margin-bottom: 20px;
 
 }
+.alert-success {
+
+  background: #e2fee7;
+
+  color: #1b995a;
+
+  padding: 12px;
+
+  border-radius: 8px;
+
+  margin-bottom: 20px;
+
+}

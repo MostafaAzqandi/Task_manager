@@ -750,3 +750,41 @@ body {
   line-height: 1.5;
   word-break: break-word;
 }
+.comment-form-container {
+  margin-top: 2rem;
+}
+
+.comment-textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+.alert-error {
+
+  background: #fee2e2;
+
+  color: #991b1b;
+
+  padding: 12px;
+
+  border-radius: 8px;
+
+  margin-bottom: 20px;
+
+}
+.alert-success {
+
+  background: #e2fee7;
+
+  color: #1b995a;
+
+  padding: 12px;
+
+  border-radius: 8px;
+
+  margin-bottom: 20px;
+
+}

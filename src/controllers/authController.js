@@ -5,9 +5,10 @@ class AuthController {
   async register(req, res, next) {
     try {
       const { fullName, username, email, password } = req.body;
-      if (!fullName || !username || !email || !password) 
-        return res.status(401).render("auth/register", { error: "All fields are required" });
-
+      if (!fullName || !username || !email || !password) {
+        req.flash("error", "All fields are required!");
+        return res.redirect("/auth/register");
+      }
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = await User.create({
         fullName,
@@ -16,7 +17,8 @@ class AuthController {
         password: hashedPassword,
       });
       req.session.userId = user.id;
-      res.redirect("/auth/login");
+      req.flash("success", "User created successfully");
+      return res.redirect("/auth/login");
     } catch (error) {
       next(error);
     }
@@ -30,18 +32,19 @@ class AuthController {
         },
       });
 
-      if (!user)
-        return res
-          .status(401)
-          .render("auth/login", { error: "Invalid credentials" }); //json({ error: "invalid credentials" });
+      if (!user) {
+        req.flash("error", "Invalid credentials");
+        return res.redirect("/auth/login");
+      }
       const passwordMatch = await bcrypt.compare(password, user.password);
-      if (!passwordMatch)
-        return res
-          .status(401)
-          .render("auth/login", { error: "Invalid credentials" }); //json({ error: "invalid credentials" });
+      if (!passwordMatch) {
+        req.flash("error", "Invalid credentials");
+        return res.redirect("/auth/login");
+      }
 
       req.session.userId = user.id;
-      res.redirect("/workspaces");
+      req.flash("success", "Login successful");
+      return res.redirect("/workspaces");
     } catch (error) {
       next(error);
     }
@@ -53,18 +56,20 @@ class AuthController {
         res.clearCookie("connect.sid");
         res.redirect("/auth/login");
       });
-    } catch (error) {}
+    } catch (error) {
+      next(error);
+    }
   }
   async loginPage(req, res, next) {
     try {
-      res.render("auth/login", { error: null });
+      res.render("auth/login");
     } catch (error) {
       next(error);
     }
   }
   async registerPage(req, res, next) {
     try {
-      res.render("auth/register", { error: null });
+      res.render("auth/register");
     } catch (error) {
       next(error);
     }

@@ -15,9 +15,9 @@
 
 <body>
   <div class="auth-container">
-    <% if( error ) { %>
+    <% if( flash.error ) { %>
       <div class="alert-error">
-        <%= error %>
+        <%= flash.error %>
       </div>
     <% } %>
         <form action="/auth/register" method="POST" class="auth-card">

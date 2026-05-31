@@ -1,6 +1,7 @@
-import { TaskComment, User } from "../models";
+import { TaskComment, User } from "../models/index.js";
+import { routes } from "../utils/routes.js";
 
-class taskCommentController {
+class TaskCommentController {
   async createComment(req, res, next) {
     try {
       await TaskComment.create({
@@ -8,6 +9,7 @@ class taskCommentController {
         userId: req.user.id,
         taskId: req.task.id
       });
+      req.flash("success", "Comment submited successfuly");
     } catch (error) {
       next(error);
     }
@@ -15,3 +17,5 @@ class taskCommentController {
   async updateComment(req, res, next) {}
   async deleteComment(req, res, next) {}
 }
+
+export default new TaskCommentController();
