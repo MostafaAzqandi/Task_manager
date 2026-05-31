@@ -156,7 +156,39 @@
         </aside>
 
       </div>
+      <div class="comments-section">
 
+        <h3>Comments</h3>
+
+        <div class="comments-list">
+
+          <% comments.forEach(comment=> { %>
+
+            <div class="comment-card">
+
+              <div class="comment-header">
+
+                <span class="comment-author">
+                  <%= comment.author.fullName %>
+                </span>
+
+                <span class="comment-date">
+                  <%= comment.createdAt %>
+                </span>
+
+              </div>
+
+              <div class="comment-content">
+                <%= comment.content %>
+              </div>
+
+            </div>
+
+            <% }) %>
+
+        </div>
+
+      </div>
     </main>
 
     <%- include("../partials/footer") %>

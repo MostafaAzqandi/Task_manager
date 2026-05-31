@@ -1,5 +1,5 @@
 import AppError from "../utils/AppError.js";
-import { Task } from "../models/index.js";
+import { Task, User } from "../models/index.js";
 
 async function taskAccessMiddleware(req, res, next) {
     try {
@@ -7,6 +7,10 @@ async function taskAccessMiddleware(req, res, next) {
             where:{
                 id: req.params.taskId,
                 boardId: req.params.boardId
+            },
+            include: {
+                model: User,
+                as: "creator"
             }
         });
 

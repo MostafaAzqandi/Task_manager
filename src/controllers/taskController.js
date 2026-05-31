@@ -1,4 +1,4 @@
-import { TaskAssignee, WorkspaceMember, User, Task } from "../models/index.js";
+import { TaskAssignee, WorkspaceMember, User, Task, TaskComment } from "../models/index.js";
 import { routes } from "../utils/routes.js";
 
 class TaskController {
@@ -45,14 +45,18 @@ class TaskController {
       const workspace = req.workspace;
       const users = await workspace.getUsers();
       const board = req.board;
-      const task = await Task.findByPk(req.task.id, {
+      const comments = await TaskComment.findAll({
+        where: {
+          taskId: req.task.id,
+        },
         include: {
           model: User,
-          as: "creator",
+          as: "author"
         },
+        order: [["createdAt", "ASC"]]
       });
+      const task = req.task;
       const assignees = await task.getAssignees();
-      console.log(users);
 
       res.render("tasks/show", {
         users,
@@ -60,9 +64,12 @@ class TaskController {
         board,
         task,
         assignees,
+        comments,
         routes,
       });
-    } catch (error) {}
+    } catch (error) {
+      next(error);
+    }
   }
   async updateTask(req, res, next) {
     try {
