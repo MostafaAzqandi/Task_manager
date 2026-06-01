@@ -104,61 +104,51 @@
 
           <div class="assigned-card">
 
-            <% if(flash.error) { %>
-              <div class="alert-error">
-                <%= flash.error %>
-              </div>
-            <% } %>
-            <% if(flash.success) { %>
-              <div class="alert-success">
-                <%= flash.sucess %>
-              </div>
-            <% } %>
-            <div class="assigned-header">
-              <h3>
-                Assigned Users
-              </h3>
+                    <div class="assigned-header">
+                      <h3>
+                        Assigned Users
+                      </h3>
 
-              <form action="<%= routes.task(workspace.id, board.id, task.id) %>/assign" method="POST"
-                class="assign-form">
+                      <form action="<%= routes.task(workspace.id, board.id, task.id) %>/assign" method="POST"
+                        class="assign-form">
 
-                <select name="userId" class="assign-select">
+                        <select name="userId" class="assign-select">
 
-                  <% users.forEach(user=> { %>
+                          <% users.forEach(user=> { %>
 
-                    <option value="<%= user.id %>">
+                            <option value="<%= user.id %>">
 
-                      <%= user.fullName %>
+                              <%= user.fullName %>
 
-                    </option>
+                            </option>
 
-                    <% }) %>
+                            <% }) %>
 
-                </select>
+                        </select>
 
-                <button type="submit" class="primary-btn small-btn">
-                  +
-                </button>
+                        <button type="submit" class="primary-btn small-btn">
+                          +
+                        </button>
 
-              </form>
+                      </form>
 
-            </div>
+                    </div>
 
-            <ul class="assigned-list">
-              <% assignees.forEach(assignee=> { %>
-                <li class="assigned-user">
-                  <div class="avatar">
-                    M
-                  </div>
+                    <ul class="assigned-list">
+                      <% assignees.forEach(assignee=> { %>
+                        <li class="assigned-user">
+                          <div class="avatar">
+                            M
+                          </div>
 
-                  <span>
-                    <%= assignee.fullName %>
-                  </span>
-                </li>
-                <% }) %>
-                  </li>
+                          <span>
+                            <%= assignee.fullName %>
+                          </span>
+                        </li>
+                        <% }) %>
+                          </li>
 
-            </ul>
+                    </ul>
 
           </div>
 
@@ -174,7 +164,13 @@
           <% comments.forEach(comment=> { %>
 
             <div class="comment-card">
+              <% if(user.id === comment.author.id) { %>
 
+                  <button class="edit-comment-btn edit-btn">Edit</button>
+                    <form action="<%= routes.task(workspace.id, board.id, task.id) %>/comments/<%= comment.id %>?_method=DELETE" method="post">
+                      <button class="delete-btn" onclick="return confirm('Delete?')">Delete</button>
+                    </form>
+              <% } %>
               <div class="comment-header">
 
                 <span class="comment-author">
@@ -190,7 +186,29 @@
               <div class="comment-content">
                 <%= comment.content %>
               </div>
+              <% if(user.id === comment.author.id) { %>
+              <form
+                class="comment-edit-form hidden"
+                action="<%= routes.task(workspace.id, board.id, task.id) %>/comments/<%= comment.id %>?_method=PATCH"
+                method="POST"
+              >
 
+                <textarea name="content"><%= comment.content %></textarea>
+
+                <button type="submit">
+                  Save
+                </button>
+
+                <button
+                  type="button"
+                  class="cancel-edit-btn"
+                >
+                  Cancel
+                </button>
+
+              </form>
+
+              <% } %>
             </div>
 
             <% }) %>

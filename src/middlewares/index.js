@@ -1,8 +1,8 @@
-export { default as loadUserMiddleware } from "./loadUserMiddleware.js";
-export { default as authMiddleware } from "./authMiddleware.js";
-export { default as globalMiddleWare } from "./globalMiddleware.js";
-export { default as workspaceAccessMiddleware } from "./workspaceAccessMiddleware.js";
-export { default as boardAccessMiddleware } from "./boardAccessMiddleware.js";
-export { default as taskAccessMiddleware } from "./taskAccessMiddleware.js";
-export {default as errorHandler} from "./errorHandler.js";
-
+export { default as loadUserMiddleware } from "./loadUser.js";
+export { default as authMiddleware } from "./auth.js";
+export { default as globalMiddleWare } from "./global.js";
+export { default as workspaceAccessMiddleware } from "./workspaceAccess.js";
+export { default as boardAccessMiddleware } from "./boardAccess.js";
+export { default as taskAccessMiddleware } from "./taskAccess.js";
+export { default as errorHandler } from "./errorHandler.js";
+export { default as ensureCommentOwner } from "./ensureCommentOwner.js";

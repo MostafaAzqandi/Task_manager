@@ -8,30 +8,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Task Manager</title>
-
   <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
-
+  
   <nav class="navbar">
-
+    
     <div class="logo">
       TaskFlow
     </div>
-
+    <% if(flash.error) { %>
+          <div class="alert-error">
+            <%= flash.error %>
+          </div>
+    <% } %>
+    <% if(flash.success) { %>
+          <div class="alert-success">
+            <%= flash.success %>
+          </div>
+    <% } %>
     <div class="nav-right">
       <% if (user) { %>
         <span class="username">
           Welcome, <%= user.fullName %>
         </span>
-
+        
         <a href="/auth/logout" class="logout-btn">
           Logout
         </a>
         <% } %>
-    </div>
-
-  </nav>
-
-  <div class="container">
+      </div>
+      
+    </nav>
+    
+    <div class="container">

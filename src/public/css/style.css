@@ -788,3 +788,60 @@ body {
   margin-bottom: 20px;
 
 }
+.hidden {
+  display: none;
+}
+
+.comment {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.comment-edit-form textarea {
+  width: 100%;
+  min-height: 80px;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ✏️ Edit button */
+.edit-btn {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.edit-btn:hover {
+  background: #bae6fd;
+  transform: translateY(-1px);
+}
+
+/* 🗑️ Delete button */
+.delete-btn {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.delete-btn:hover {
+  background: #fecaca;
+  transform: translateY(-1px);
+}
+
+/* Click effect */
+.edit-btn:active,
+.delete-btn:active {
+  transform: scale(0.96);
+}

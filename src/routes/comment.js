@@ -5,6 +5,7 @@ import {
   workspaceAccessMiddleware,
   boardAccessMiddleware,
   taskAccessMiddleware,
+  ensureCommentOwner
 } from "../middlewares/index.js";
 import { routes } from "../utils/routes.js";
 
@@ -18,6 +19,25 @@ router.post(
   taskAccessMiddleware,
   TaskCommentController.createComment,
 );
+router.patch(
+  "/:commentId",
+  authMiddleware,
+  workspaceAccessMiddleware,
+  boardAccessMiddleware,
+  taskAccessMiddleware,
+  ensureCommentOwner,
+  TaskCommentController.updateComment,
+);
+router.delete(
+  "/:commentId",
+  authMiddleware,
+  workspaceAccessMiddleware,
+  boardAccessMiddleware,
+  taskAccessMiddleware,
+  ensureCommentOwner,
+  TaskCommentController.deleteComment,
+);
+
 
 
 export default router;
