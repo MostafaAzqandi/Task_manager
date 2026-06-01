@@ -2,11 +2,14 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import session from "express-session";
+import flash from "connect-flash";
 import methodOverride from "method-override";
 import authRouter from "./routes/auth.js";
 import workspaceRouter from "./routes/workspace.js";
 import boardRouter from "./routes/board.js";
 import taskRouter from "./routes/task.js";
+import commentRouter from "./routes/comment.js";
+
 import {
   errorHandler,
   globalMiddleWare,
@@ -29,6 +32,7 @@ app.use(
     cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 },
   }),
 );
+app.use(flash());
 app.use(loadUserMiddleware);
 app.use(globalMiddleWare);
 
@@ -40,6 +44,8 @@ app.use("/auth", authRouter);
 app.use("/workspaces", workspaceRouter);
 app.use("/workspaces/:workspaceId/boards", boardRouter);
 app.use("/workspaces/:workspaceId/boards/:boardId/tasks", taskRouter);
+app.use("/workspaces/:workspaceId/boards/:boardId/tasks/:taskId/comments", commentRouter);
+
 
 app.use(errorHandler);
 

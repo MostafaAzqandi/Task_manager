@@ -1,4 +1,10 @@
-import { TaskAssignee, WorkspaceMember, User, Task } from "../models/index.js";
+import {
+  TaskAssignee,
+  WorkspaceMember,
+  User,
+  Task,
+  TaskComment,
+} from "../models/index.js";
 import { routes } from "../utils/routes.js";
 
 class TaskController {
@@ -45,14 +51,18 @@ class TaskController {
       const workspace = req.workspace;
       const users = await workspace.getUsers();
       const board = req.board;
-      const task = await Task.findByPk(req.task.id, {
+      const comments = await TaskComment.findAll({
+        where: {
+          taskId: req.task.id,
+        },
         include: {
           model: User,
-          as: "creator",
+          as: "author",
         },
+        order: [["createdAt", "ASC"]],
       });
+      const task = req.task;
       const assignees = await task.getAssignees();
-      console.log(users);
 
       res.render("tasks/show", {
         users,
@@ -60,20 +70,24 @@ class TaskController {
         board,
         task,
         assignees,
+        comments,
         routes,
       });
-    } catch (error) {}
+    } catch (error) {
+      next(error);
+    }
   }
   async updateTask(req, res, next) {
     try {
-      const {title, description, priority, status , startDate, expireDate} = req.body;
+      const { title, description, priority, status, startDate, expireDate } =
+        req.body;
       await req.task.update({
         title,
         description,
         status,
         priority,
         startDate,
-        expireDate
+        expireDate,
       });
       // res.json(req.task);
       res.redirect(routes.task(req.workspace.id, req.board.id, req.task.id));
@@ -92,6 +106,7 @@ class TaskController {
   }
   async assignTask(req, res, next) {
     try {
+      const redirectToTask = routes.task(req.workspace.id, req.board.id, req.task.id);
       const membership = await WorkspaceMember.findOne({
         where: {
           workspaceId: req.params.workspaceId,
@@ -100,9 +115,8 @@ class TaskController {
       });
 
       if (!membership) {
-        return res.status(400).json({
-          error: "User Not in workspace",
-        });
+        req.flash("error", "User Not in workspace");
+        return res.redirect(redirectToTask);
       }
       const isAssigned = await TaskAssignee.findOne({
         where: {
@@ -111,18 +125,17 @@ class TaskController {
         },
       });
       if (isAssigned) {
-        return res.status(400).json({
-          error: "User already assigned",
-        });
+        req.flash("error", "User already assigned");
+        return res.redirect(redirectToTask);
       }
 
       await TaskAssignee.create({
         taskId: req.task.id,
         userId: req.body.userId,
       });
-
+      req.flash("success", "User Assigned");
+      return res.redirect(redirectToTask);
       // res.json({ message: "Task assigned" });
-      res.redirect(routes.task(req.workspace.id, req.board.id, req.task.id));
     } catch (error) {
       next(error);
     }

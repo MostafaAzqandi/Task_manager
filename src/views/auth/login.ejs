@@ -20,9 +20,9 @@
 <body>
 
   <div class="auth-container">
-    <% if( error ) { %>
+    <% if( flash.error ) { %>
     <div class="alert-error">
-      <%= error %>
+      <%= flash.error %>
     </div>
     <% } %>
     <form action="/auth/login" method="POST" class="auth-card">

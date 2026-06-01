@@ -63,7 +63,7 @@
               </span>
 
               <span class="detail-value">
-                June 5, 2026
+                <%= task.expireDate %>
               </span>
 
             </div>
@@ -104,8 +104,17 @@
 
           <div class="assigned-card">
 
+            <% if(flash.error) { %>
+              <div class="alert-error">
+                <%= flash.error %>
+              </div>
+            <% } %>
+            <% if(flash.success) { %>
+              <div class="alert-success">
+                <%= flash.sucess %>
+              </div>
+            <% } %>
             <div class="assigned-header">
-
               <h3>
                 Assigned Users
               </h3>
@@ -156,7 +165,53 @@
         </aside>
 
       </div>
+      <div class="comments-section">
 
+        <h3>Comments</h3>
+
+        <div class="comments-list">
+
+          <% comments.forEach(comment=> { %>
+
+            <div class="comment-card">
+
+              <div class="comment-header">
+
+                <span class="comment-author">
+                  <%= comment.author.fullName %>
+                </span>
+
+                <span class="comment-date">
+                  <%= comment.createdAt %>
+                </span>
+
+              </div>
+
+              <div class="comment-content">
+                <%= comment.content %>
+              </div>
+
+            </div>
+
+            <% }) %>
+
+        </div>
+        <div class="comment-form-container">
+
+          <h3>Add Comment</h3>
+
+          <form action="<%= routes.task(workspace.id, board.id, task.id) %>/comments" method="POST">
+
+            <textarea name="content" class="comment-textarea" placeholder="Write a comment..." required></textarea>
+
+            <button type="submit" class="primary-btn">
+              Comment
+            </button>
+
+          </form>
+
+        </div>
+      </div>
     </main>
 
     <%- include("../partials/footer") %>
