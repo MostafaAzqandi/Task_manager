@@ -1,4 +1,5 @@
 import { TaskComment, User } from "../models/index.js";
+import { logActivity } from "../utils/activityLogger.js";
 import { routes } from "../utils/routes.js";
 
 class TaskCommentController {
@@ -9,8 +10,16 @@ class TaskCommentController {
         userId: req.user.id,
         taskId: req.task.id,
       });
+
+      await logActivity({
+        taskId: req.task.id,
+        userId: req.user.id,
+        action: "comment_created",
+      });
       req.flash("success", "Comment submited successfuly");
-      return res.redirect(routes.task(req.workspace.id, req.board.id, req.task.id));
+      return res.redirect(
+        routes.task(req.workspace.id, req.board.id, req.task.id),
+      );
     } catch (error) {
       next(error);
     }
@@ -26,6 +35,11 @@ class TaskCommentController {
       await req.comment.update({
         content: req.body.content,
       });
+      await logActivity({
+        taskId: req.task.id,
+        userId: req.user.id,
+        action: "comment_updated",
+      });
       req.flash("success", "Comment changed");
       return res.redirect(
         routes.task(req.workspace.id, req.board.id, req.task.id),
@@ -37,6 +51,11 @@ class TaskCommentController {
   async deleteComment(req, res, next) {
     try {
       await req.comment.destroy();
+      await logActivity({
+        taskId: req.task.id,
+        userId: req.user.id,
+        action: "comment_deleted",
+      });
       req.flash("success", "Comment Deleted");
       return res.redirect(
         routes.task(req.workspace.id, req.board.id, req.task.id),
