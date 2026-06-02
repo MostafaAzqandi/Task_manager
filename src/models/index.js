@@ -4,17 +4,18 @@ import WorkspaceMember from "./WorkspaceMember.js";
 import Board from "./Board.js";
 import Task from "./Task.js";
 import TaskAssignee from "./TaskAssignee.js";
-import TaskComment from "./TaskComment.js"
+import TaskComment from "./TaskComment.js";
+import ActivityLog from "./ActivityLog.js";
 
 // User <--> Workspace
 User.belongsToMany(Workspace, {
   through: WorkspaceMember,
-  foreignKey: "userId"
+  foreignKey: "userId",
 });
 
 Workspace.belongsToMany(User, {
   through: WorkspaceMember,
-  foreignKey: "workspaceId"
+  foreignKey: "workspaceId",
 });
 
 // Workspace --> Board
@@ -29,32 +30,63 @@ Task.belongsTo(Board, { foreignKey: "boardId" });
 Task.belongsToMany(User, {
   through: TaskAssignee,
   foreignKey: "taskId",
-  as: "assignees"
+  as: "assignees",
 });
 User.belongsToMany(Task, {
   through: TaskAssignee,
   foreignKey: "userId",
-  as: "assignedTasks"
+  as: "assignedTasks",
 });
 
+// User --> Task
 User.hasMany(Task, { foreignKey: "createdBy", as: "createdTasks" });
 Task.belongsTo(User, { foreignKey: "createdBy", as: "creator" });
 
+// Task --> Comment
 Task.hasMany(TaskComment, {
-  foreignKey: "task_id"
+  foreignKey: "taskId",
 });
-
 TaskComment.belongsTo(Task, {
-  foreignKey: "task_id"
+  foreignKey: "taskId",
 });
 
+// User --> Comment
 User.hasMany(TaskComment, {
-  foreignKey: "user_id"
+  foreignKey: "userId",
 });
-
 TaskComment.belongsTo(User, {
-  foreignKey: "user_id",
-  as: "author"
+  foreignKey: "userId",
+  as: "author",
 });
 
-export { User, Workspace, WorkspaceMember, Board, Task, TaskAssignee, TaskComment };
+// User --> Activity
+ActivityLog.belongsTo(User, {
+  foreignKey: "userId",
+  as: "actor",
+});
+User.hasMany(ActivityLog, {
+  foreignKey: "userId",
+  as: "activities",
+});
+
+
+// Task --> Activity
+ActivityLog.belongsTo(Task, {
+  foreignKey: "taskId",
+  as: "task",
+});
+Task.hasMany(ActivityLog, {
+  foreignKey: "taskId",
+  as: "activities",
+});
+
+export {
+  User,
+  Workspace,
+  WorkspaceMember,
+  Board,
+  Task,
+  TaskAssignee,
+  TaskComment,
+  ActivityLog,
+};
