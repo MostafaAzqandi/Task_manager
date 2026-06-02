@@ -1,226 +1,164 @@
 <!-- views/tasks/show.ejs -->
 
 <%- include("../partials/header") %>
+<%- include("../partials/sidebar") %>
 
-  <%- include("../partials/sidebar") %>
+<main class="main-content">
 
-    <main class="main-content">
+  <div class="task-layout">
 
-      <div class="task-page">
+    <!-- ================= LEFT SIDE ================= -->
+    <div class="task-main">
 
-        <div class="task-main-card">
+      <!-- TASK CARD -->
+      <div class="task-main-card">
 
-          <div class="task-header">
+        <div class="task-header">
 
-            <div>
+          <div>
+            <h1 class="single-task-title">
+              <%= task.title %>
+            </h1>
 
-              <h1 class="single-task-title">
-                <%= task.title %>
-              </h1>
-
-              <p class="single-task-meta">
-                <%= board.title %> • <%= workspace.title %>
-              </p>
-
-            </div>
-
-            <span class="task-status status-progress">
-              <%= task.status %>
-            </span>
-
-          </div>
-
-          <div class="task-section">
-
-            <h3>
-              Description
-            </h3>
-
-            <p class="single-task-description">
-              <%= task.description %>
+            <p class="single-task-meta">
+              <%= board.title %> • <%= workspace.title %>
             </p>
-
           </div>
 
-          <div class="task-details-grid">
+          <span class="task-status status-progress">
+            <%= task.status %>
+          </span>
 
-            <div class="task-detail-box">
+        </div>
 
-              <span class="detail-label">
-                Priority
-              </span>
+        <div class="task-section">
+          <h3>Description</h3>
+          <p class="single-task-description">
+            <%= task.description %>
+          </p>
+        </div>
 
-              <span class="task-priority <%= task.priority %>-priority">
-                <%= task.priority %>
-              </span>
+        <div class="task-details-grid">
 
-            </div>
-
-            <div class="task-detail-box">
-
-              <span class="detail-label">
-                Due Date
-              </span>
-
-              <span class="detail-value">
-                <%= task.expireDate %>
-              </span>
-
-            </div>
-
-            <div class="task-detail-box">
-
-              <span class="detail-label">
-                Created By
-              </span>
-
-              <span class="detail-value">
-                <%= task.creator.fullName %>
-              </span>
-
-            </div>
-
+          <div class="task-detail-box">
+            <span class="detail-label">Priority</span>
+            <span class="task-priority <%= task.priority %>-priority">
+              <%= task.priority %>
+            </span>
           </div>
 
-          <div class="task-actions">
+          <div class="task-detail-box">
+            <span class="detail-label">Due Date</span>
+            <span class="detail-value">
+              <%= task.expireDate %>
+            </span>
+          </div>
 
-            <a href="/workspaces/<%= workspace.id %>/boards/<%= board.id %>/tasks/<%= task.id %>/edit"
-              class="secondary-btn">
-              Edit Task
-            </a>
-
-            <form action="<%= routes.task(workspace.id, board.id, task.id) %>?_method=DELETE" method="POST">
-
-              <button type="submit" class="danger-btn" onclick="return confirm('Delete this task?')">
-                Delete
-              </button>
-
-            </form>
+          <div class="task-detail-box">
+            <span class="detail-label">Created By</span>
+            <span class="detail-value">
+              <%= task.creator.fullName %>
+            </span>
           </div>
 
         </div>
 
-        <aside class="task-sidebar">
+        <div class="task-actions">
+          <a href="/workspaces/<%= workspace.id %>/boards/<%= board.id %>/tasks/<%= task.id %>/edit"
+             class="secondary-btn">
+            Edit Task
+          </a>
 
-          <div class="assigned-card">
-
-                    <div class="assigned-header">
-                      <h3>
-                        Assigned Users
-                      </h3>
-
-                      <form action="<%= routes.task(workspace.id, board.id, task.id) %>/assign" method="POST"
-                        class="assign-form">
-
-                        <select name="userId" class="assign-select">
-
-                          <% users.forEach(user=> { %>
-
-                            <option value="<%= user.id %>">
-
-                              <%= user.fullName %>
-
-                            </option>
-
-                            <% }) %>
-
-                        </select>
-
-                        <button type="submit" class="primary-btn small-btn">
-                          +
-                        </button>
-
-                      </form>
-
-                    </div>
-
-                    <ul class="assigned-list">
-                      <% assignees.forEach(assignee=> { %>
-                        <li class="assigned-user">
-                          <div class="avatar">
-                            M
-                          </div>
-
-                          <span>
-                            <%= assignee.fullName %>
-                          </span>
-                        </li>
-                        <% }) %>
-                          </li>
-
-                    </ul>
-
-          </div>
-
-        </aside>
+          <form action="<%= routes.task(workspace.id, board.id, task.id) %>?_method=DELETE"
+                method="POST">
+            <button type="submit"
+                    class="danger-btn"
+                    onclick="return confirm('Delete this task?')">
+              Delete
+            </button>
+          </form>
+        </div>
 
       </div>
+
+      <!-- ================= COMMENTS ================= -->
       <div class="comments-section">
 
         <h3>Comments</h3>
 
         <div class="comments-list">
 
-          <% comments.forEach(comment=> { %>
+          <% comments.forEach(comment => { %>
 
             <div class="comment-card">
-              <% if(user.id === comment.author.id) { %>
 
-                  <button class="edit-comment-btn edit-btn">Edit</button>
-                    <form action="<%= routes.task(workspace.id, board.id, task.id) %>/comments/<%= comment.id %>?_method=DELETE" method="post">
-                      <button class="delete-btn" onclick="return confirm('Delete?')">Delete</button>
-                    </form>
-              <% } %>
               <div class="comment-header">
 
-                <span class="comment-author">
-                  <%= comment.author.fullName %>
-                </span>
+                <div>
+                  <span class="comment-author">
+                    <%= comment.author.fullName %>
+                  </span>
 
-                <span class="comment-date">
-                  <%= comment.createdAt %>
-                </span>
+                  <span class="comment-date">
+                    <%= comment.createdAt %>
+                  </span>
+                </div>
+
+                <% if (user.id === comment.author.id) { %>
+                  <div class="comment-actions">
+                    <button class="edit-comment-btn edit-btn">Edit</button>
+
+                    <form action="<%= routes.task(workspace.id, board.id, task.id) %>/comments/<%= comment.id %>?_method=DELETE"
+                          method="POST">
+                      <button class="delete-btn"
+                              onclick="return confirm('Delete?')">
+                        Delete
+                      </button>
+                    </form>
+                  </div>
+                <% } %>
 
               </div>
 
               <div class="comment-content">
                 <%= comment.content %>
               </div>
-              <% if(user.id === comment.author.id) { %>
-              <form
-                class="comment-edit-form hidden"
-                action="<%= routes.task(workspace.id, board.id, task.id) %>/comments/<%= comment.id %>?_method=PATCH"
-                method="POST"
-              >
 
-                <textarea name="content"><%= comment.content %></textarea>
+              <% if (user.id === comment.author.id) { %>
+                <form class="comment-edit-form hidden"
+                      action="<%= routes.task(workspace.id, board.id, task.id) %>/comments/<%= comment.id %>?_method=PATCH"
+                      method="POST">
 
-                <button type="submit">
-                  Save
-                </button>
+                  <textarea name="content"><%= comment.content %></textarea>
 
-                <button
-                  type="button"
-                  class="cancel-edit-btn"
-                >
-                  Cancel
-                </button>
+                  <div class="comment-edit-actions">
+                    <button type="submit" class="primary-btn small-btn">Save</button>
+                    <button type="button" class="cancel-edit-btn secondary-btn small-btn">
+                      Cancel
+                    </button>
+                  </div>
 
-              </form>
-
+                </form>
               <% } %>
+
             </div>
 
-            <% }) %>
+          <% }) %>
 
         </div>
+
+        <!-- COMMENT FORM -->
         <div class="comment-form-container">
 
           <h3>Add Comment</h3>
 
-          <form action="<%= routes.task(workspace.id, board.id, task.id) %>/comments" method="POST">
+          <form action="<%= routes.task(workspace.id, board.id, task.id) %>/comments"
+                method="POST">
 
-            <textarea name="content" class="comment-textarea" placeholder="Write a comment..." required></textarea>
+            <textarea name="content"
+                      class="comment-textarea"
+                      placeholder="Write a comment..."
+                      required></textarea>
 
             <button type="submit" class="primary-btn">
               Comment
@@ -229,7 +167,99 @@
           </form>
 
         </div>
-      </div>
-    </main>
 
-    <%- include("../partials/footer") %>
+      </div>
+
+    </div>
+
+    <!-- ================= RIGHT SIDE ================= -->
+    <div class="task-sidebar">
+
+      <!-- ASSIGN SECTION -->
+      <div class="assigned-card">
+
+        <div class="assigned-header">
+          <h3>Assigned Users</h3>
+
+          <form action="<%= routes.task(workspace.id, board.id, task.id) %>/assign"
+                method="POST"
+                class="assign-form">
+
+            <select name="userId" class="assign-select">
+
+              <% users.forEach(user => { %>
+                <option value="<%= user.id %>">
+                  <%= user.fullName %>
+                </option>
+              <% }) %>
+
+            </select>
+
+            <button type="submit" class="primary-btn small-btn">
+              +
+            </button>
+
+          </form>
+
+        </div>
+
+        <ul class="assigned-list">
+          <% assignees.forEach(assignee => { %>
+            <li class="assigned-user">
+              <div class="avatar">M</div>
+              <span><%= assignee.fullName %></span>
+            </li>
+          <% }) %>
+        </ul>
+
+      </div>
+
+      <!-- ACTIVITY LOG (READY SPACE) -->
+      <div class="activity-section">
+        <h3>Activity Log</h3>
+
+        <div class="activity-list">
+
+          <% activities.forEach(activity => { %>
+
+            <div class="activity-item">
+
+              <div class="activity-dot"></div>
+
+              <div class="activity-content">
+
+                <div class="activity-text">
+                  <strong><%= activity.actor.fullName %></strong>
+
+                  <% if (activity.action === "comment_created") { %>
+                    added a comment
+                  <% } else if (activity.action === "comment_updated") { %>
+                    updated a comment
+                  <% } else if (activity.action === "comment_deleted") { %>
+                    deleted a comment
+                  <% } else if (activity.action === "task_assigned") { %>
+                    was assigned to the task
+                  <% } %>
+
+                </div>
+
+                <div class="activity-time">
+                  <%= new Date(activity.createdAt).toLocaleString() %>
+                </div>
+
+              </div>
+
+            </div>
+
+          <% }) %>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+<%- include("../partials/footer") %>

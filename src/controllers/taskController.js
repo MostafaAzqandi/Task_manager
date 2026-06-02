@@ -4,7 +4,9 @@ import {
   User,
   Task,
   TaskComment,
+  ActivityLog
 } from "../models/index.js";
+import { logActivity } from "../utils/activityLogger.js";
 import { routes } from "../utils/routes.js";
 
 class TaskController {
@@ -61,6 +63,17 @@ class TaskController {
         },
         order: [["createdAt", "ASC"]],
       });
+      const activities = await ActivityLog.findAll({
+        where: {
+          taskId: req.task.id,
+        },
+        include: {
+          model: User,
+          attributes: ["id", "fullName"],
+          as: "actor"
+        },
+        order: [["createdAt", "DESC"]],
+      });
       const task = req.task;
       const assignees = await task.getAssignees();
 
@@ -71,6 +84,7 @@ class TaskController {
         task,
         assignees,
         comments,
+        activities,
         routes,
       });
     } catch (error) {
@@ -106,7 +120,11 @@ class TaskController {
   }
   async assignTask(req, res, next) {
     try {
-      const redirectToTask = routes.task(req.workspace.id, req.board.id, req.task.id);
+      const redirectToTask = routes.task(
+        req.workspace.id,
+        req.board.id,
+        req.task.id,
+      );
       const membership = await WorkspaceMember.findOne({
         where: {
           workspaceId: req.params.workspaceId,
@@ -132,6 +150,11 @@ class TaskController {
       await TaskAssignee.create({
         taskId: req.task.id,
         userId: req.body.userId,
+      });
+      await logActivity({
+        taskId: req.task.id,
+        userId: req.user.id,
+        action: "task_assigned",
       });
       req.flash("success", "User Assigned");
       return res.redirect(redirectToTask);

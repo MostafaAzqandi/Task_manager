@@ -845,3 +845,104 @@ body {
 .delete-btn:active {
   transform: scale(0.96);
 }
+.task-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* LEFT SIDE STACK */
+.task-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* RIGHT SIDE STACK */
+.task-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* =======================
+   ASSIGNED USERS FIX
+======================= */
+.assigned-list {
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* =======================
+   ACTIVITY LOG PANEL
+======================= */
+.activity-section {
+  background: white;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* =======================
+   COMMENT HEADER FIX
+   (EDIT / DELETE RIGHT SIDE)
+======================= */
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+/* group buttons nicely */
+.comment-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* keep buttons compact inside comments */
+.comment-actions .edit-btn,
+.comment-actions .delete-btn {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+/* =======================
+   COMMENT EDIT FORM FIX
+======================= */
+.comment-edit-form {
+  margin-top: 10px;
+}
+
+.comment-edit-form textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.comment-edit-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* =======================
+   SMALL UX IMPROVEMENTS
+======================= */
+.task-main-card,
+.assigned-card,
+.activity-section {
+  transition: 0.2s ease;
+}
+
+.task-main-card:hover,
+.assigned-card:hover {
+  transform: translateY(-2px);
+}
