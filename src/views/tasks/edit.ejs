@@ -59,15 +59,15 @@
 
         <select name="status">
 
-          <option>
+          <option value="todo">
             Todo
           </option>
 
-          <option selected>
+          <option selected value="in_progress">
             In Progress
           </option>
 
-          <option>
+          <option value="done">
             Done
           </option>
 
@@ -83,15 +83,15 @@
 
         <select name="priority">
 
-          <option>
+          <option value="low">
             Low
           </option>
 
-          <option selected>
+          <option selected value="medium">
             Medium
           </option>
 
-          <option>
+          <option value="high">
             High
           </option>
 
@@ -107,7 +107,7 @@
 
         <input
           type="date"
-          name="dueDate"
+          name="expireDate"
         >
 
       </div>
@@ -122,7 +122,7 @@
         </button>
 
         <a
-          href="#"
+          href="<%= routes.task(workspace.id, board.id, task.id) %>"
           class="secondary-btn"
         >
           Cancel

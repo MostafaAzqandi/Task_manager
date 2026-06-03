@@ -5,6 +5,10 @@ import { routes } from "../utils/routes.js";
 class TaskCommentController {
   async createComment(req, res, next) {
     try {
+      if (!req.body.content?.trim()) {
+        req.flash("error", "Comment cannot be empty");
+        return res.redirect(routes.task(req.workspace.id, req.board.id, req.task.id));
+      }
       await TaskComment.create({
         content: req.body.content,
         userId: req.user.id,
@@ -16,7 +20,7 @@ class TaskCommentController {
         userId: req.user.id,
         action: "comment_created",
       });
-      req.flash("success", "Comment submited successfuly");
+      req.flash("success", "Comment created");
       return res.redirect(
         routes.task(req.workspace.id, req.board.id, req.task.id),
       );

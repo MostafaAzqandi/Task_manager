@@ -1,17 +1,21 @@
 import { Board } from "../models/index.js";
 import { routes } from "../utils/routes.js";
-//i mean here i : const workspace= req.workspace ....
+
 class BoardController {
   async createBoard(req, res, next) {
     try {
+      if (!req.body.title?.trim()) {
+        req.flash("error", "Title cannot be empty");
+        return res.redirect(routes.workspace(req.workspace.id) + "/boards/new");
+      }
       await Board.create({
         title: req.body.title,
         workspaceId: req.workspace.id,
         createdBy: req.user.id,
       });
 
-      // res.json(board);
-      res.redirect(routes.workspace(req.workspace.id));
+      req.flash("success", "Board Created");
+      return res.redirect(routes.workspace(req.workspace.id));
     } catch (error) {
       next(error);
     }
@@ -37,11 +41,17 @@ class BoardController {
   }
   async updateBoard(req,res, next) {
     try {
+      const { title, description } = req.body;
+      if (!title?.trim() || ! description?.trim()) {
+        req.flash("error", "Fields cannot be empty");
+        return res.redirect(routes.board(req.workspace.id, req.board.id) + "/edit");
+      }
       await req.board.update({
-        title: req.body.title,
-        description: req.body.description
+        title,
+        description
       });
-      res.redirect(routes.board(req.workspace.id, req.board.id));
+      req.flash("success", "Board Updated");
+      return res.redirect(routes.board(req.workspace.id, req.board.id));
     } catch (error) {
       next(error)
     }
@@ -50,7 +60,8 @@ class BoardController {
     try {
       await req.board.destroy();
       // res.json({ message: "Task deleted" });
-      res.redirect(routes.workspace(req.workspace.id));
+      req.flash("success", "Board Deleted");
+      return res.redirect(routes.workspace(req.workspace.id));
     } catch (error) {
       next(error);
     }
@@ -75,9 +86,13 @@ class BoardController {
     }
   }
   getBoardEditPage(req, res, next) {
-    const workspace = req. workspace;
-    const board = req.board;
-    res.render("boards/edit", { workspace, board, routes });
+    try {
+      const workspace = req. workspace;
+      const board = req.board;
+      res.render("boards/edit", { workspace, board, routes });
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

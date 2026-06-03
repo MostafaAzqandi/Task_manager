@@ -1,34 +1,49 @@
-<!-- views/partials/sidebar.ejs -->
-
 <aside class="sidebar">
 
   <div class="sidebar-header">
     <h2>Workspaces</h2>
 
-    <a href="/workspaces/new" class="new-workspace-btn">
-      +
-    </a>
+    <a href="/workspaces/new" class="new-workspace-btn">+</a>
   </div>
 
   <ul class="workspace-list">
 
-    <li class="workspace-item">
-      <a href="#">
-        Marketing Team
-      </a>
-    </li>
+    <% workspaces.forEach(workspace => { %>
 
-    <li class="workspace-item">
-      <a href="#">
-        Startup Project
-      </a>
-    </li>
+      <li class="workspace-item">
 
-    <li class="workspace-item">
-      <a href="#">
-        Personal Tasks
-      </a>
-    </li>
+        <a href="/workspaces/<%= workspace.id %>"
+           class="<%= currentWorkspaceId === workspace.id ? 'active' : '' %>">
+          <%= workspace.title %>
+
+        </a>
+
+        <!-- BOARDS (only show if workspace is active) -->
+        <% if (currentWorkspaceId === workspace.id) { %>
+
+          <ul class="board-list">
+
+            <% workspace.Boards.forEach(board => { %>
+
+              <li class="board-item">
+
+                <a href="/workspaces/<%= workspace.id %>/boards/<%= board.id %>">
+
+                  <%= board.title %>
+
+                </a>
+
+              </li>
+
+            <% }) %>
+
+          </ul>
+
+        <% } %>
+
+      </li>
+
+    <% }) %>
 
   </ul>
 

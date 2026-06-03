@@ -4,29 +4,52 @@ import {
   User,
   Task,
   TaskComment,
-  ActivityLog
+  ActivityLog,
 } from "../models/index.js";
 import { logActivity } from "../utils/activityLogger.js";
 import { routes } from "../utils/routes.js";
+import { validateTaskDates } from "../utils/taskValidation.js";
 
 class TaskController {
   async createTask(req, res, next) {
     try {
-      const { title, description, priority, status, startDate, expireDate } =
-        req.body;
+      const redirectToTask =
+        routes.board(req.workspace.id, req.board.id) + "/tasks/new";
+      const { title, description, priority, status, expireDate } = req.body;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (
+        !title?.trim() ||
+        !description?.trim() ||
+        !priority?.trim() ||
+        !status?.trim() ||
+        !expireDate?.trim()
+      ) {
+        req.flash("error", "Fields are required");
+
+        return res.redirect(redirectToTask);
+      }
+
+      if (!validateTaskDates(expireDate)) {
+        req.flash("error", "Expire date must be after today");
+
+        return res.redirect(redirectToTask);
+      }
       await Task.create({
         title,
         description,
         priority,
         status,
-        startDate,
+        startDate: today,
         expireDate,
         boardId: req.board.id,
         createdBy: req.user.id,
       });
 
-      // res.json(task);
-      res.redirect(routes.board(req.workspace.id, req.board.id));
+      req.flash("success", "Task created");
+
+      return res.redirect(routes.board(req.workspace.id, req.board.id));
     } catch (error) {
       next(error);
     }
@@ -70,7 +93,7 @@ class TaskController {
         include: {
           model: User,
           attributes: ["id", "fullName"],
-          as: "actor"
+          as: "actor",
         },
         order: [["createdAt", "DESC"]],
       });
@@ -93,18 +116,27 @@ class TaskController {
   }
   async updateTask(req, res, next) {
     try {
-      const { title, description, priority, status, startDate, expireDate } =
-        req.body;
+      const { title, description, priority, status, expireDate } = req.body;
+      if (
+        !title?.trim() ||
+        !description?.trim() ||
+        !priority?.trim() ||
+        !status?.trim() ||
+        !expireDate?.trim()
+      ) {
+        req.flash("error", "Fields are required");
+
+        return res.redirect(routes.task(req.workspace.id, req.board.id, req.task.id) + "/edit");
+      }
       await req.task.update({
         title,
         description,
         status,
         priority,
-        startDate,
         expireDate,
       });
-      // res.json(req.task);
-      res.redirect(routes.task(req.workspace.id, req.board.id, req.task.id));
+      req.flash("success", "Task Updated");
+      return res.redirect(routes.task(req.workspace.id, req.board.id, req.task.id));
     } catch (error) {
       next(error);
     }
@@ -112,8 +144,8 @@ class TaskController {
   async deleteTask(req, res, next) {
     try {
       await req.task.destroy();
-      // res.json({ message: "Task deleted" });
-      res.redirect(routes.board(req.workspace.id, req.board.id));
+      req.flash("success", "Task Deleted");
+      return res.redirect(routes.board(req.workspace.id, req.board.id));
     } catch (error) {
       next(error);
     }

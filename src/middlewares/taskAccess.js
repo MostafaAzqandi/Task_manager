@@ -6,7 +6,7 @@ async function taskAccessMiddleware(req, res, next) {
         const task = await Task.findOne({
             where:{
                 id: req.params.taskId,
-                boardId: req.params.boardId
+                boardId: req.board.id
             },
             include: {
                 model: User,

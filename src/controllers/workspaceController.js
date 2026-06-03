@@ -7,6 +7,10 @@ class WorkspaceController {
     let transaction;
     try {
       transaction = await sequelize.transaction();
+      if (!req.body.title?.trim()) {
+        req.flash("error", "Title cannot be empty");
+        return res.redirect("/workspaces/new");
+      }
       const workspace = await Workspace.create(
         {
           title: req.body.title,
@@ -25,7 +29,8 @@ class WorkspaceController {
       await transaction.commit();
 
       // res.json(workspace);
-      res.redirect("/workspaces");
+      req.flash("success", "Workspace created");
+      return res.redirect("/workspaces");
     } catch (error) {
       if (transaction) {
         await transaction.rollback();
@@ -35,10 +40,15 @@ class WorkspaceController {
   }
   async updateWorkspace(req, res, next){
     try {
+      if (!req.body.title?.trim()) {
+        req.flash("error", "Title cannot be empty");
+        return res.redirect(routes.workspace(req.workspace.id) + "/edit");
+      }
       await req.workspace.update({
         title: req.body.title
       });
-      res.redirect(routes.workspace(req.workspace.id));
+      req.flash("success", "Workspace updated");
+      return res.redirect(routes.workspace(req.workspace.id));
     } catch (error) {
       next(error);
     }
@@ -47,7 +57,8 @@ class WorkspaceController {
     try {
       await req.workspace.destroy();
       // res.json({ message: "Task deleted" });
-      res.redirect("/workspaces");
+      req.flash("success", "Workspace Deleted");
+      return res.redirect("/workspaces");
     } catch (error) {
       next(error);
     }
