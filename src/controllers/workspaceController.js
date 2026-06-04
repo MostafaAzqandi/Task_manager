@@ -164,7 +164,7 @@ class WorkspaceController {
       await WorkspaceMember.create({
         workspaceId: req.workspace.id,
         userId: user.id,
-        role: "admin"
+        role: "member"
       })
       req.flash("success", "User invited");
       res.redirect(routes.workspace(req.workspace.id));

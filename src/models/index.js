@@ -6,6 +6,7 @@ import Task from "./Task.js";
 import TaskAssignee from "./TaskAssignee.js";
 import TaskComment from "./TaskComment.js";
 import ActivityLog from "./ActivityLog.js";
+import Notification from "./Notification.js";
 
 // User <--> Workspace
 User.belongsToMany(Workspace, {
@@ -69,7 +70,6 @@ User.hasMany(ActivityLog, {
   as: "activities",
 });
 
-
 // Task --> Activity
 ActivityLog.belongsTo(Task, {
   foreignKey: "taskId",
@@ -78,6 +78,14 @@ ActivityLog.belongsTo(Task, {
 Task.hasMany(ActivityLog, {
   foreignKey: "taskId",
   as: "activities",
+});
+
+// User --> Notification
+Notification.belongsTo(User,{
+  foreignKey: "userId"
+});
+User.hasMany(Notification, {
+  foreignKey: "userId"
 });
 
 export {
@@ -89,4 +97,5 @@ export {
   TaskAssignee,
   TaskComment,
   ActivityLog,
+  Notification
 };
