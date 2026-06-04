@@ -12,8 +12,8 @@
 
           <h1 class="workspace-title">
             <%= workspace.title %>
+              /<%= workspace.visibility %>
           </h1>
-
           <p class="workspace-meta">
             <%= boards.length %> Boards • <%= memberCount %> Members
           </p>
@@ -21,7 +21,11 @@
         </div>
 
         <div class="workspace-actions">
-
+          <form action="/workspaces/<%= workspace.id %>/invite" method="POST">
+            <label>Invite users to this worksapce: </label>
+            <input type="email" name="email" placeholder="User email">
+            <button type="submit">Invite</button>
+          </form>
           <a href="<%= routes.workspace(workspace.id) %>/edit" class="secondary-btn">
             Edit Workspace
           </a>

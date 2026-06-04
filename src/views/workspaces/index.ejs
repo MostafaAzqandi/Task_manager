@@ -33,13 +33,12 @@
               <h2>
                 <%= workspace.title %>
               </h2>
-
+              
               <span class="workspace-role">
-                <%= workspace.WorkspaceMember.role %>
+                <%= workspace.WorkspaceMember?.role || "guest" %>
               </span>
-
+              <%= workspace.visibility %>
             </div>
-
             <p class="workspace-description">
               <%= workspace.description || "No description" %>
             </p>

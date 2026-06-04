@@ -1,5 +1,12 @@
+import { Op } from "sequelize";
 import sequelize from "../database/database.js";
-import { Task, Workspace, WorkspaceMember, Board } from "../models/index.js";
+import {
+  User,
+  Task,
+  Workspace,
+  WorkspaceMember,
+  Board,
+} from "../models/index.js";
 import { routes } from "../utils/routes.js";
 
 class WorkspaceController {
@@ -7,13 +14,14 @@ class WorkspaceController {
     let transaction;
     try {
       transaction = await sequelize.transaction();
-      if (!req.body.title?.trim()) {
+      if (!req.body.title?.trim() || !req.body.visibility?.trim()) {
         req.flash("error", "Title cannot be empty");
         return res.redirect("/workspaces/new");
       }
       const workspace = await Workspace.create(
         {
           title: req.body.title,
+          visibility: req.body.visibility,
           createdBy: req.user.id,
         },
         { transaction },
@@ -38,14 +46,15 @@ class WorkspaceController {
       next(error);
     }
   }
-  async updateWorkspace(req, res, next){
+  async updateWorkspace(req, res, next) {
     try {
-      if (!req.body.title?.trim()) {
+      if (!req.body.title?.trim() || !req.body.visibility?.trim()) {
         req.flash("error", "Title cannot be empty");
         return res.redirect(routes.workspace(req.workspace.id) + "/edit");
       }
       await req.workspace.update({
-        title: req.body.title
+        title: req.body.title,
+        visibility: req.body.visibility,
       });
       req.flash("success", "Workspace updated");
       return res.redirect(routes.workspace(req.workspace.id));
@@ -80,11 +89,24 @@ class WorkspaceController {
   }
   async getWorkspacesPage(req, res, next) {
     try {
-      const workspaces = await req.user.getWorkspaces({
+      const publicWorkspaces = await Workspace.findAll({
+        where: {
+          visibility: "public",
+        },
         include: [Board],
-        joinTableAttributes: [ "role" ]
       });
-      
+
+      const memberWorkspaces = await req.user.getWorkspaces({
+        include: [Board],
+        joinTableAttributes: ["role"],
+      });
+      const map = new Map();
+
+      for (const w of [...publicWorkspaces, ...memberWorkspaces]) {
+        map.set(w.id, w);
+      }
+
+      const workspaces = [...map.values()];
       res.render("workspaces/index", { workspaces });
     } catch (error) {
       next(error);
@@ -95,14 +117,14 @@ class WorkspaceController {
       const workspace = req.workspace;
       const memberCount = await workspace.countUsers();
       const boards = await workspace.getBoards({
-        include: [Task]
+        include: [Task],
       });
-      res.render("workspaces/show", { workspace , boards, memberCount, routes});
+      res.render("workspaces/show", { workspace, boards, memberCount, routes });
     } catch (error) {
       next(error);
     }
   }
-  createWorkspacePage(req, res, next){
+  createWorkspacePage(req, res, next) {
     try {
       res.render("workspaces/create");
     } catch (error) {
@@ -112,7 +134,40 @@ class WorkspaceController {
   getWorkspaceEditPage(req, res, next) {
     try {
       const workspace = req.workspace;
-      res.render("workspaces/edit", {workspace, routes});
+      res.render("workspaces/edit", { workspace, routes });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async inviteUser(req, res, next) {
+    try {
+      const user = await User.findOne({
+        where: {
+          email: req.body.email
+        }
+      });
+      if (!user) {
+        req.flash("error", "User Not found");
+        return res.redirect(routes.workspace(req.workspace.id));
+      }
+      const existingMember = await WorkspaceMember.findOne({
+        where: {
+          userId: user.id,
+          workspaceId: req.workspace.id
+        }
+      });
+      if (existingMember) {
+        req.flash("error", "User already a member");
+        return res.redirect(routes.workspace(req.workspace.id));
+      }
+
+      await WorkspaceMember.create({
+        workspaceId: req.workspace.id,
+        userId: user.id,
+        role: "admin"
+      })
+      req.flash("success", "User invited");
+      res.redirect(routes.workspace(req.workspace.id));
     } catch (error) {
       next(error);
     }

@@ -5,46 +5,5 @@
 
     <a href="/workspaces/new" class="new-workspace-btn">+</a>
   </div>
-
-  <ul class="workspace-list">
-
-    <% workspaces.forEach(workspace => { %>
-
-      <li class="workspace-item">
-
-        <a href="/workspaces/<%= workspace.id %>"
-           class="<%= currentWorkspaceId === workspace.id ? 'active' : '' %>">
-          <%= workspace.title %>
-
-        </a>
-
-        <!-- BOARDS (only show if workspace is active) -->
-        <% if (currentWorkspaceId === workspace.id) { %>
-
-          <ul class="board-list">
-
-            <% workspace.Boards.forEach(board => { %>
-
-              <li class="board-item">
-
-                <a href="/workspaces/<%= workspace.id %>/boards/<%= board.id %>">
-
-                  <%= board.title %>
-
-                </a>
-
-              </li>
-
-            <% }) %>
-
-          </ul>
-
-        <% } %>
-
-      </li>
-
-    <% }) %>
-
-  </ul>
-
+  
 </aside>

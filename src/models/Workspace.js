@@ -13,7 +13,10 @@ const Workspace = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       notEmpty: true
-      // field: "created_by"
+    },
+    visibility: {
+      type: DataTypes.ENUM("public", "private"),
+      allowNull: false
     }
   },
   {

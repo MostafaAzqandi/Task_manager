@@ -10,25 +10,21 @@ const router = express.Router({ mergeParams: true });
 router.post(
   "/",
   authMiddleware,
-  workspaceAccessMiddleware,
+  workspaceAccessMiddleware("edit"),
   BoardController.createBoard
 );
+
 router.get(
   "/new",
   authMiddleware,
-  workspaceAccessMiddleware,
+  workspaceAccessMiddleware("edit"),
   BoardController.createBoardPage
 );
-// router.get(
-//   "/",
-//   authMiddleware,
-//   workspaceAccessMiddleware,
-//   BoardController.getBoardsPage,
-// );
+
 router.get(
   "/:boardId",
   authMiddleware,
-  workspaceAccessMiddleware,
+  workspaceAccessMiddleware("view"),
   boardAccessMiddleware,
   BoardController.getBoardPage
 );
@@ -36,22 +32,25 @@ router.get(
 router.get(
   "/:boardId/edit",
   authMiddleware,
-  workspaceAccessMiddleware,
+  workspaceAccessMiddleware("edit"),
   boardAccessMiddleware,
   BoardController.getBoardEditPage
 );
+
 router.patch(
   "/:boardId",
   authMiddleware,
-  workspaceAccessMiddleware,
+  workspaceAccessMiddleware("edit"),
   boardAccessMiddleware,
   BoardController.updateBoard
 );
+
 router.delete(
   "/:boardId",
   authMiddleware,
-  workspaceAccessMiddleware,
+  workspaceAccessMiddleware("edit"),
   boardAccessMiddleware,
-  BoardController.deleteBoard,
+  BoardController.deleteBoard
 );
+
 export default router;
