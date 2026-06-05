@@ -6,3 +6,4 @@ export { default as boardAccessMiddleware } from "./boardAccess.js";
 export { default as taskAccessMiddleware } from "./taskAccess.js";
 export { default as errorHandler } from "./errorHandler.js";
 export { default as ensureCommentOwner } from "./ensureCommentOwner.js";
+export { default as notificationAccessMiddleware } from "./notificationAccess.js" 

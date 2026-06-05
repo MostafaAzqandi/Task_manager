@@ -10,7 +10,7 @@ function errorHandler(error, req, res, next) {
     });
   }
   if (status === 401) {
-    return res.status(404).render("errors/401", {
+    return res.status(401).render("errors/401", {
       error,
     });
   }

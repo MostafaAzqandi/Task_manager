@@ -994,3 +994,163 @@ body {
 .board-item a:hover {
   background: #e5e7eb;
 }
+.notification-wrapper {
+  position: relative;
+}
+
+.notification-btn {
+  position: relative;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 22px;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.notification-popup {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+.notification-item {
+  display: block;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-decoration: none;
+  color: black;
+}
+
+.notification-item.unread {
+  background: #f5f5f5;
+}
+.notification-wrapper {
+position: relative;
+margin-right: 20px;
+}
+
+.notification-btn {
+position: relative;
+border: none;
+background: transparent;
+cursor: pointer;
+font-size: 22px;
+color: white;
+}
+
+.notification-badge {
+position: absolute;
+top: -6px;
+right: -10px;
+background: crimson;
+color: white;
+border-radius: 50%;
+min-width: 18px;
+height: 18px;
+font-size: 11px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: bold;
+}
+
+.notification-popup {
+position: absolute;
+top: 45px;
+right: 0;
+width: 340px;
+max-height: 420px;
+overflow-y: auto;
+background: white;
+border-radius: 12px;
+box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+padding: 12px;
+z-index: 1000;
+}
+
+.notification-popup h4 {
+margin-bottom: 10px;
+color: #333;
+}
+
+.hidden {
+display: none;
+}
+
+.notification-item {
+width: 100%;
+}
+
+.notification-item form {
+width: 100%;
+}
+
+.notification-item button {
+width: 100%;
+border: none;
+background: transparent;
+text-align: left;
+padding: 12px;
+border-radius: 8px;
+cursor: pointer;
+transition: background 0.2s;
+}
+
+.notification-item button:hover {
+background: #f5f5f5;
+}
+
+.notification-item.unread button {
+background: #eef4ff;
+}
+
+.notification-item.read button {
+opacity: 0.8;
+}
+
+.notification-item h5 {
+margin-bottom: 4px;
+color: #222;
+}
+
+.notification-item p {
+margin-bottom: 6px;
+color: #555;
+font-size: 14px;
+}
+
+.notification-item small {
+color: #888;
+font-size: 12px;
+}
+
+.notification-popup hr {
+border: none;
+border-top: 1px solid #eee;
+margin: 8px 0;
+}
+.notification-item {
+  cursor: pointer;
+}

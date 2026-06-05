@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../database/database";
+import sequelize from "../database/database.js";
 
 const Notification = sequelize.define("Notification",{
     type: {

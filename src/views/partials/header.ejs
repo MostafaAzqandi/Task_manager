@@ -33,6 +33,48 @@
         <span class="username">
           Welcome, <%= user.fullName %>
         </span>
+      <div class="notification-wrapper">
+
+        <button id="notificationBtn" class="notification-btn">
+          🔔
+
+          <% const unreadCount = notifications.filter(n => !n.isRead).length; %>
+
+          <% if (unreadCount > 0) { %>
+            <span class="notification-badge">
+              <%= unreadCount %>
+            </span>
+          <% } %>
+
+        </button>
+
+        <div id="notificationPopup" class="notification-popup hidden">
+
+          <h4>Notifications</h4>
+
+          <% if (notifications.length === 0) { %>
+
+            <p>No notifications</p>
+
+          <% } %>
+
+          <% notifications.forEach(notification => { %>
+            
+              <div
+                class="notification-item <%= notification.isRead ? 'read' : 'unread' %>"
+                data-id="<%= notification.id %>"
+              >
+                <h5><%= notification.type %></h5>
+                <p><%= notification.message %></p>
+                <small><%= notification.createdAt.toLocaleString() %></small>
+              </div>
+              <hr>
+
+          <% }) %>
+
+        </div>
+
+      </div>
         
         <a href="/auth/logout" class="logout-btn">
           Logout

@@ -9,6 +9,7 @@ import workspaceRouter from "./routes/workspace.js";
 import boardRouter from "./routes/board.js";
 import taskRouter from "./routes/task.js";
 import commentRouter from "./routes/comment.js";
+import notificationRouter from "./routes/notification.js"
 
 import {
   errorHandler,
@@ -41,6 +42,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/auth", authRouter);
+app.use("/notifications", notificationRouter)
 app.use("/workspaces", workspaceRouter);
 app.use("/workspaces/:workspaceId/boards", boardRouter);
 app.use("/workspaces/:workspaceId/boards/:boardId/tasks", taskRouter);

@@ -5,6 +5,7 @@ import {
   Task,
   TaskComment,
   ActivityLog,
+  Notification
 } from "../models/index.js";
 import { logActivity } from "../utils/activityLogger.js";
 import { routes } from "../utils/routes.js";
@@ -187,6 +188,11 @@ class TaskController {
         taskId: req.task.id,
         userId: req.user.id,
         action: "task_assigned",
+      });
+      await Notification.create({
+        userId: req.body.userId,
+        type: "User assignment",
+        message: `You assigned to a task: ${req.task.title}/workspace: ${req.workspace.title}`
       });
       req.flash("success", "User Assigned");
       return res.redirect(redirectToTask);
