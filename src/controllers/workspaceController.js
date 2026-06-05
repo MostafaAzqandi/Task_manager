@@ -6,6 +6,7 @@ import {
   Workspace,
   WorkspaceMember,
   Board,
+  Notification
 } from "../models/index.js";
 import { routes } from "../utils/routes.js";
 
@@ -165,6 +166,11 @@ class WorkspaceController {
         workspaceId: req.workspace.id,
         userId: user.id,
         role: "member"
+      });
+      await Notification.create({
+        userId: user.id,
+        type: "Workspace invitation",
+        message: `You are invited to workspace: ${req.workspace.title}`
       })
       req.flash("success", "User invited");
       res.redirect(routes.workspace(req.workspace.id));
