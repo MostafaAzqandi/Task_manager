@@ -13,26 +13,26 @@ router.get(
 router.get(
   "/:workspaceId",
   authMiddleware,
-  workspaceAccessMiddleware("view"),
+  workspaceAccessMiddleware(),
   WorkspaceController.getWorkspacePage,
 );
 router.get(
   "/:workspaceId/edit",
   authMiddleware,
-  workspaceAccessMiddleware("edit"),
+  workspaceAccessMiddleware(),
   WorkspaceController.getWorkspaceEditPage,
 );
 
 router.patch(
   "/:workspaceId",
   authMiddleware,
-  workspaceAccessMiddleware("edit"),
+  workspaceAccessMiddleware(),
   WorkspaceController.updateWorkspace,
 );
 router.delete(
   "/:workspaceId",
   authMiddleware,
-  workspaceAccessMiddleware("edit"),
+  workspaceAccessMiddleware(),
   WorkspaceController.deleteWorkspace
 );
 
@@ -45,7 +45,7 @@ router.get(
 router.post(
   "/:workspaceId/invite",
   authMiddleware,
-  workspaceAccessMiddleware("edit"),
+  workspaceAccessMiddleware(),
   WorkspaceController.inviteUser
 );
 

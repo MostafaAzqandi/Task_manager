@@ -12,28 +12,21 @@ const router = express.Router({ mergeParams: true });
 router.post(
   "/",
   authMiddleware,
-  workspaceAccessMiddleware("edit"),
+  workspaceAccessMiddleware(),
   boardAccessMiddleware,
   TaskController.createTask,
 );
 router.get(
   "/new",
   authMiddleware,
-  workspaceAccessMiddleware("edit"),
+  workspaceAccessMiddleware(),
   boardAccessMiddleware,
   TaskController.createTaskPage,
 );
 router.get(
-  "/",
-  authMiddleware,
-  workspaceAccessMiddleware("view"),
-  boardAccessMiddleware,
-  TaskController.getTasks,
-);
-router.get(
   "/:taskId",
   authMiddleware,
-  workspaceAccessMiddleware("view"),
+  workspaceAccessMiddleware(),
   boardAccessMiddleware,
   taskAccessMiddleware,
   TaskController.getTaskPage,
@@ -41,7 +34,7 @@ router.get(
 router.patch(
   "/:taskId",
   authMiddleware,
-  workspaceAccessMiddleware("edit"),
+  workspaceAccessMiddleware(),
   boardAccessMiddleware,
   taskAccessMiddleware,
   TaskController.updateTask,
@@ -49,7 +42,7 @@ router.patch(
 router.delete(
   "/:taskId",
   authMiddleware,
-  workspaceAccessMiddleware("edit"),
+  workspaceAccessMiddleware(),
   boardAccessMiddleware,
   taskAccessMiddleware,
   TaskController.deleteTask,
@@ -57,7 +50,7 @@ router.delete(
 router.post(
   "/:taskId/assign",
   authMiddleware,
-  workspaceAccessMiddleware("edit"),
+  workspaceAccessMiddleware(),
   boardAccessMiddleware,
   taskAccessMiddleware,
   TaskController.assignTask,
@@ -65,7 +58,7 @@ router.post(
 router.get(
   "/:taskId/edit",
   authMiddleware,
-  workspaceAccessMiddleware("edit"),
+  workspaceAccessMiddleware(),
   boardAccessMiddleware,
   taskAccessMiddleware,
   TaskController.getTaskEditPage,

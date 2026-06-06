@@ -1,139 +1,180 @@
-<!-- views/tasks/show.ejs -->
-
 <%- include("../partials/header") %>
 <%- include("../partials/sidebar") %>
 
-<main class="main-content">
+<main class="flex-1 p-8">
 
-  <div class="task-layout">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
     <!-- ================= LEFT SIDE ================= -->
-    <div class="task-main">
+    <div class="lg:col-span-2 space-y-6">
 
       <!-- TASK CARD -->
-      <div class="task-main-card">
+      <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
 
-        <div class="task-header">
+        <!-- HEADER -->
+        <div class="flex items-start justify-between mb-6">
 
           <div>
-            <h1 class="single-task-title">
+            <h1 class="text-3xl font-bold text-gray-900">
               <%= task.title %>
             </h1>
 
-            <p class="single-task-meta">
+            <p class="text-gray-500 mt-1">
               <%= board.title %> • <%= workspace.title %>
             </p>
           </div>
 
-          <span class="task-status status-progress">
+          <span class="px-3 py-1 text-sm rounded-full bg-yellow-100 text-yellow-700">
             <%= task.status %>
           </span>
 
         </div>
 
-        <div class="task-section">
-          <h3>Description</h3>
-          <p class="single-task-description">
+        <!-- DESCRIPTION -->
+        <div class="mb-6">
+
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">
+            Description
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed">
             <%= task.description %>
           </p>
+
         </div>
 
-        <div class="task-details-grid">
+        <!-- DETAILS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
 
-          <div class="task-detail-box">
-            <span class="detail-label">Priority</span>
-            <span class="task-priority <%= task.priority %>-priority">
+          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <span class="text-sm text-gray-500 block mb-1">Priority</span>
+
+            <span class="px-2 py-1 text-xs rounded-full
+              <%= task.priority === 'high' ? 'bg-red-100 text-red-700' :
+                  task.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                  'bg-blue-100 text-blue-700' %>">
+
               <%= task.priority %>
+
             </span>
           </div>
 
-          <div class="task-detail-box">
-            <span class="detail-label">Due Date</span>
-            <span class="detail-value">
+          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <span class="text-sm text-gray-500 block mb-1">Due Date</span>
+
+            <span class="font-semibold text-gray-800">
               <%= task.expireDate %>
             </span>
           </div>
 
-          <div class="task-detail-box">
-            <span class="detail-label">Created By</span>
-            <span class="detail-value">
+          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <span class="text-sm text-gray-500 block mb-1">Created By</span>
+
+            <span class="font-semibold text-gray-800">
               <%= task.creator.fullName %>
             </span>
           </div>
 
         </div>
 
-        <div class="task-actions">
-          <a href="/workspaces/<%= workspace.id %>/boards/<%= board.id %>/tasks/<%= task.id %>/edit"
-             class="secondary-btn">
-            Edit Task
-          </a>
+        <!-- ACTIONS -->
+        <% if (permissions?.canEdit) { %>
+          <div class="flex gap-3">
 
-          <form action="<%= routes.task(workspace.id, board.id, task.id) %>?_method=DELETE"
-                method="POST">
-            <button type="submit"
-                    class="danger-btn"
-                    onclick="return confirm('Delete this task?')">
-              Delete
-            </button>
-          </form>
-        </div>
+            <a href="/workspaces/<%= workspace.id %>/boards/<%= board.id %>/tasks/<%= task.id %>/edit"
+               class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-medium transition">
+              Edit Task
+            </a>
+
+            <% if (permissions?.canInvite) { %>
+              <form action="<%= routes.task(workspace.id, board.id, task.id) %>?_method=DELETE"
+                    method="POST">
+
+                <button type="submit"
+                        onclick="return confirm('Delete this task?')"
+                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition">
+                  Delete
+                </button>
+
+              </form>
+            <% } %>
+
+          </div>
+        <% } %>
 
       </div>
 
       <!-- ================= COMMENTS ================= -->
-      <div class="comments-section">
+      <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
 
-        <h3>Comments</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">
+          Comments
+        </h3>
 
-        <div class="comments-list">
+        <div class="space-y-4">
 
           <% comments.forEach(comment => { %>
 
-            <div class="comment-card">
+            <div class="border border-gray-200 rounded-lg p-4">
 
-              <div class="comment-header">
+              <!-- HEADER -->
+              <div class="flex justify-between items-start mb-2">
 
                 <div>
-                  <span class="comment-author">
+                  <span class="font-semibold text-gray-800">
                     <%= comment.author.fullName %>
                   </span>
 
-                  <span class="comment-date">
-                    <%= comment.createdAt %>
+                  <span class="text-xs text-gray-500 ml-2">
+                    <%= new Date(comment.createdAt).toLocaleString() %>
                   </span>
                 </div>
 
-                <% if (user.id === comment.author.id) { %>
-                  <div class="comment-actions">
-                    <button class="edit-comment-btn edit-btn">Edit</button>
+                <% if (user.id === comment.author.id && permissions?.canEdit) { %>
+                  <div class="flex gap-2">
+
+                    <button class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded edit-comment-btn">
+                      Edit
+                    </button>
 
                     <form action="<%= routes.task(workspace.id, board.id, task.id) %>/comments/<%= comment.id %>?_method=DELETE"
                           method="POST">
-                      <button class="delete-btn"
-                              onclick="return confirm('Delete?')">
+
+                      <button onclick="return confirm('Delete?')"
+                              class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded">
                         Delete
                       </button>
+
                     </form>
+
                   </div>
                 <% } %>
 
               </div>
 
-              <div class="comment-content">
+              <!-- CONTENT -->
+              <p class="text-gray-600">
                 <%= comment.content %>
-              </div>
+              </p>
 
+              <!-- EDIT FORM -->
               <% if (user.id === comment.author.id) { %>
-                <form class="comment-edit-form hidden"
+                <form class="hidden mt-3"
                       action="<%= routes.task(workspace.id, board.id, task.id) %>/comments/<%= comment.id %>?_method=PATCH"
                       method="POST">
 
-                  <textarea name="content"><%= comment.content %></textarea>
+                  <textarea name="content"
+                            class="w-full border border-gray-300 rounded-lg p-2 mb-2">
+                    <%= comment.content %>
+                  </textarea>
 
-                  <div class="comment-edit-actions">
-                    <button type="submit" class="primary-btn small-btn">Save</button>
-                    <button type="button" class="cancel-edit-btn secondary-btn small-btn">
+                  <div class="flex gap-2">
+                    <button class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-sm">
+                      Save
+                    </button>
+
+                    <button type="button"
+                            class="bg-gray-200 px-3 py-1 rounded-lg text-sm cancel-edit-btn">
                       Cancel
                     </button>
                   </div>
@@ -148,19 +189,22 @@
         </div>
 
         <!-- COMMENT FORM -->
-        <div class="comment-form-container">
+        <div class="mt-6">
 
-          <h3>Add Comment</h3>
+          <h3 class="text-lg font-semibold mb-2">
+            Add Comment
+          </h3>
 
           <form action="<%= routes.task(workspace.id, board.id, task.id) %>/comments"
-                method="POST">
+                method="POST"
+                class="space-y-3">
 
             <textarea name="content"
-                      class="comment-textarea"
                       placeholder="Write a comment..."
-                      required></textarea>
+                      required
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500"></textarea>
 
-            <button type="submit" class="primary-btn">
+            <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-semibold transition">
               Comment
             </button>
 
@@ -173,87 +217,104 @@
     </div>
 
     <!-- ================= RIGHT SIDE ================= -->
-    <div class="task-sidebar">
+    <div class="space-y-6">
 
-      <!-- ASSIGN SECTION -->
-      <div class="assigned-card">
+      <!-- ASSIGN CARD -->
+      <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
 
-        <div class="assigned-header">
-          <h3>Assigned Users</h3>
+        <div class="flex justify-between items-center mb-4">
 
-          <form action="<%= routes.task(workspace.id, board.id, task.id) %>/assign"
-                method="POST"
-                class="assign-form">
+          <h3 class="text-lg font-bold text-gray-900">
+            Assigned Users
+          </h3>
 
-            <select name="userId" class="assign-select">
+          <% if (permissions?.canEdit || permissions?.canAssign) { %>
 
-              <% users.forEach(user => { %>
-                <option value="<%= user.id %>">
-                  <%= user.fullName %>
-                </option>
-              <% }) %>
+            <form action="<%= routes.task(workspace.id, board.id, task.id) %>/assign"
+                  method="POST"
+                  class="flex gap-2">
 
-            </select>
+              <select name="userId"
+                      class="border border-gray-300 rounded-lg px-2 py-1 text-sm">
 
-            <button type="submit" class="primary-btn small-btn">
-              +
-            </button>
+                <% users.forEach(user => { %>
+                  <option value="<%= user.id %>">
+                    <%= user.fullName %>
+                  </option>
+                <% }) %>
 
-          </form>
+              </select>
+
+              <button class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-sm">
+                +
+              </button>
+
+            </form>
+
+          <% } %>
 
         </div>
 
-        <ul class="assigned-list">
+        <div class="space-y-3">
+
           <% assignees.forEach(assignee => { %>
-            <li class="assigned-user">
-              <div class="avatar">M</div>
-              <span><%= assignee.fullName %></span>
-            </li>
-          <% }) %>
-        </ul>
 
-      </div>
+            <div class="flex items-center gap-3">
 
-      <!-- ACTIVITY LOG (READY SPACE) -->
-      <div class="activity-section">
-        <h3>Activity Log</h3>
-
-        <div class="activity-list">
-
-          <% activities.forEach(activity => { %>
-
-            <div class="activity-item">
-
-              <div class="activity-dot"></div>
-
-              <div class="activity-content">
-
-                <div class="activity-text">
-                  <strong><%= activity.actor.fullName %></strong>
-
-                  <% if (activity.action === "comment_created") { %>
-                    added a comment
-                  <% } else if (activity.action === "comment_updated") { %>
-                    updated a comment
-                  <% } else if (activity.action === "comment_deleted") { %>
-                    deleted a comment
-                  <% } else if (activity.action === "task_assigned") { %>
-                    assigned a user to the task
-                  <% } %>
-
-                </div>
-
-                <div class="activity-time">
-                  <%= new Date(activity.createdAt).toLocaleString() %>
-                </div>
-
+              <div class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">
+                <%= assignee.fullName.charAt(0) %>
               </div>
+
+              <span class="text-gray-700">
+                <%= assignee.fullName %>
+              </span>
 
             </div>
 
           <% }) %>
 
         </div>
+
+      </div>
+
+      <!-- ACTIVITY LOG -->
+      <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+
+        <h3 class="text-lg font-bold text-gray-900 mb-4">
+          Activity Log
+        </h3>
+
+        <div class="space-y-4">
+
+          <% activities.forEach(activity => { %>
+
+            <div class="border-l-2 border-indigo-200 pl-3">
+
+              <p class="text-sm text-gray-700">
+                <strong><%= activity.actor.fullName %></strong>
+
+                <% if (activity.action === "comment_created") { %>
+                  added a comment
+                <% } else if (activity.action === "comment_updated") { %>
+                  updated a comment
+                <% } else if (activity.action === "comment_deleted") { %>
+                  deleted a comment
+                <% } else if (activity.action === "task_assigned") { %>
+                  assigned a user to the task
+                <% } %>
+
+              </p>
+
+              <span class="text-xs text-gray-500">
+                <%= new Date(activity.createdAt).toLocaleString() %>
+              </span>
+
+            </div>
+
+          <% }) %>
+
+        </div>
+
       </div>
 
     </div>

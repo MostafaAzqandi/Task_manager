@@ -1,30 +1,33 @@
-<!-- views/tasks/edit.ejs -->
-
 <%- include("../partials/header") %>
-
 <%- include("../partials/sidebar") %>
 
-<main class="main-content">
+<main class="flex-1 p-8 flex justify-center">
 
-  <div class="form-container">
+  <!-- FORM CARD -->
+  <div class="w-full max-w-2xl bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
 
-    <div class="form-header">
+    <!-- HEADER -->
+    <div class="mb-6">
 
-      <h1>
+      <h1 class="text-2xl font-bold text-gray-900">
         Edit Task
       </h1>
 
-      <p>
+      <p class="text-gray-500 mt-1">
         Update "<%= task.title %>" task information
       </p>
 
     </div>
 
-    <form action="<%= routes.task(workspace.id, board.id, task.id) %>?_method=PATCH" method="POST">
+    <!-- FORM -->
+    <form action="<%= routes.task(workspace.id, board.id, task.id) %>?_method=PATCH"
+          method="POST"
+          class="space-y-5">
 
-      <div class="form-group">
+      <!-- TITLE -->
+      <div>
 
-        <label>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">
           Task Title
         </label>
 
@@ -33,13 +36,15 @@
           name="title"
           value="<%= task.title %>"
           placeholder="Task title"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
 
       </div>
 
-      <div class="form-group">
+      <!-- DESCRIPTION -->
+      <div>
 
-        <label>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">
           Description
         </label>
 
@@ -47,83 +52,107 @@
           name="description"
           rows="6"
           placeholder="Task description"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
         ><%= task.description %></textarea>
 
       </div>
 
-      <div class="form-group">
+      <!-- STATUS + PRIORITY -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-        <label>
-          Status
-        </label>
+        <!-- STATUS -->
+        <div>
 
-        <select name="status">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Status
+          </label>
 
-          <option value="todo">
-            Todo
-          </option>
+          <select
+            name="status"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
 
-          <option selected value="in_progress">
-            In Progress
-          </option>
+            <option value="todo"
+              <%= task.status === "todo" ? "selected" : "" %>>
+              Todo
+            </option>
 
-          <option value="done">
-            Done
-          </option>
+            <option value="in_progress"
+              <%= task.status === "in_progress" ? "selected" : "" %>>
+              In Progress
+            </option>
 
-        </select>
+            <option value="done"
+              <%= task.status === "done" ? "selected" : "" %>>
+              Done
+            </option>
+
+          </select>
+
+        </div>
+
+        <!-- PRIORITY -->
+        <div>
+
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Priority
+          </label>
+
+          <select
+            name="priority"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+
+            <option value="low"
+              <%= task.priority === "low" ? "selected" : "" %>>
+              Low
+            </option>
+
+            <option value="medium"
+              <%= task.priority === "medium" ? "selected" : "" %>>
+              Medium
+            </option>
+
+            <option value="high"
+              <%= task.priority === "high" ? "selected" : "" %>>
+              High
+            </option>
+
+          </select>
+
+        </div>
 
       </div>
 
-      <div class="form-group">
+      <!-- DUE DATE -->
+      <div>
 
-        <label>
-          Priority
-        </label>
-
-        <select name="priority">
-
-          <option value="low">
-            Low
-          </option>
-
-          <option selected value="medium">
-            Medium
-          </option>
-
-          <option value="high">
-            High
-          </option>
-
-        </select>
-
-      </div>
-
-      <div class="form-group">
-
-        <label>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">
           Due Date
         </label>
 
         <input
           type="date"
           name="expireDate"
+          value="<%= task.expireDate ? new Date(task.expireDate).toISOString().split('T')[0] : '' %>"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
 
       </div>
 
-      <div class="form-actions">
+      <!-- ACTIONS -->
+      <div class="flex gap-3 pt-2">
 
         <button
           type="submit"
-          class="primary-btn"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-semibold transition"
         >
           Save Changes
         </button>
 
         <a
           href="<%= routes.task(workspace.id, board.id, task.id) %>"
-          class="secondary-btn"
+          class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-5 py-2 rounded-lg font-medium transition"
         >
           Cancel
         </a>

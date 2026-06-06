@@ -14,7 +14,7 @@ const router = express.Router({ mergeParams: true });
 router.post(
   "/",
   authMiddleware,
-  workspaceAccessMiddleware("view"),
+  workspaceAccessMiddleware(),
   boardAccessMiddleware,
   taskAccessMiddleware,
   TaskCommentController.createComment,
@@ -22,7 +22,7 @@ router.post(
 router.patch(
   "/:commentId",
   authMiddleware,
-  workspaceAccessMiddleware("edit"),
+  workspaceAccessMiddleware(),
   boardAccessMiddleware,
   taskAccessMiddleware,
   ensureCommentOwner,
@@ -31,7 +31,7 @@ router.patch(
 router.delete(
   "/:commentId",
   authMiddleware,
-  workspaceAccessMiddleware("edit"),
+  workspaceAccessMiddleware(),
   boardAccessMiddleware,
   taskAccessMiddleware,
   ensureCommentOwner,

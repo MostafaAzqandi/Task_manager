@@ -1,162 +1,160 @@
-<!-- views/tasks/create.ejs -->
-
 <%- include("../partials/header") %>
-
 <%- include("../partials/sidebar") %>
 
-<main class="main-content">
+<main class="flex-1 p-8 flex justify-center">
 
-  <div class="form-page">
+  <!-- FORM CARD -->
+  <div class="w-full max-w-2xl bg-white border border-gray-200 rounded-xl p-8 shadow-sm">
 
-    <div class="form-card">
+    <!-- HEADER -->
+    <div class="mb-6">
 
-      <div class="form-header">
+      <h1 class="text-2xl font-bold text-gray-900">
+        Create Task
+      </h1>
 
-        <h1>
-          Create Task
-        </h1>
+      <p class="text-gray-500 mt-1">
+        <%= board.title %> • <%= workspace.title %>
+      </p>
 
-        <p>
-          <%= board.title %> • <%= workspace.title %>
-        </p>
+    </div>
+
+    <!-- FORM -->
+    <form
+      action="/workspaces/<%= workspace.id %>/boards/<%= board.id %>/tasks"
+      method="POST"
+      class="space-y-5"
+    >
+
+      <!-- TITLE -->
+      <div>
+
+        <label class="block text-sm font-semibold text-gray-700 mb-2">
+          Title
+        </label>
+
+        <input
+          type="text"
+          name="title"
+          placeholder="Task title..."
+          required
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
 
       </div>
 
-      <% if (error) { %>
+      <!-- DESCRIPTION -->
+      <div>
 
-        <div class="alert-error">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">
+          Description
+        </label>
 
-          <%= error %>
+        <textarea
+          name="description"
+          rows="6"
+          placeholder="Task description..."
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+        ></textarea>
 
-        </div>
+      </div>
 
-      <% } %>
+      <!-- PRIORITY + STATUS -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-      <form
-        action="/workspaces/<%= workspace.id %>/boards/<%= board.id %>/tasks"
-        method="POST"
-        class="task-form"
-      >
+        <!-- PRIORITY -->
+        <div>
 
-        <div class="form-group">
-
-          <label>
-            Title
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Priority
           </label>
 
-          <input
-            type="text"
-            name="title"
-            placeholder="Task title..."
-            required
+          <select
+            name="priority"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
+
+            <option value="low">
+              Low
+            </option>
+
+            <option value="medium" selected>
+              Medium
+            </option>
+
+            <option value="high">
+              High
+            </option>
+
+          </select>
 
         </div>
 
-        <div class="form-group">
+        <!-- STATUS -->
+        <div>
 
-          <label>
-            Description
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Status
           </label>
 
-          <textarea
-            name="description"
-            rows="6"
-            placeholder="Task description..."
-          ></textarea>
-
-        </div>
-
-        <div class="form-row">
-
-          <div class="form-group">
-
-            <label>
-              Priority
-            </label>
-
-            <select name="priority">
-
-              <option value="low">
-                Low
-              </option>
-
-              <option value="medium" selected>
-                Medium
-              </option>
-
-              <option value="high">
-                High
-              </option>
-
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label>
-              Status
-            </label>
-
-            <select name="status">
-
-              <option value="todo">
-                Todo
-              </option>
-
-              <option value="in_progress">
-                In Progress
-              </option>
-
-              <option value="done">
-                Done
-              </option>
-
-            </select>
-
-          </div>
-
-        </div>
-
-        <div class="form-row">
-
-        <div class="form-group">
-
-          <label>
-            Due Date
-          </label>
-
-          <input
-            type="date"
-            name="expireDate"
+          <select
+            name="status"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
 
-        </div>
+            <option value="todo">
+              Todo
+            </option>
+
+            <option value="in_progress">
+              In Progress
+            </option>
+
+            <option value="done">
+              Done
+            </option>
+
+          </select>
 
         </div>
 
-        <div class="form-actions">
+      </div>
 
-          <a
-            href="<%= routes.board(workspace.id, board.id) %>"
-            class="secondary-btn"
-          >
-            Cancel
-          </a>
+      <!-- DUE DATE -->
+      <div>
 
-          <button
-            type="submit"
-            class="primary-btn"
-          >
-            Create Task
-          </button>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">
+          Due Date
+        </label>
 
-        </div>
+        <input
+          type="date"
+          name="expireDate"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
 
-      </form>
+      </div>
 
-    </div>
+      <!-- ACTIONS -->
+      <div class="flex gap-3 pt-2">
+
+        <a
+          href="<%= routes.board(workspace.id, board.id) %>"
+          class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-5 py-2 rounded-lg font-medium transition"
+        >
+          Cancel
+        </a>
+
+        <button
+          type="submit"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-semibold transition"
+        >
+          Create Task
+        </button>
+
+      </div>
+
+    </form>
 
   </div>
 

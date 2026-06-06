@@ -1,95 +1,121 @@
-<!-- views/boards/show.ejs -->
-
 <%- include("../partials/header") %>
+<%- include("../partials/sidebar") %>
 
-  <%- include("../partials/sidebar") %>
+<main class="flex-1 p-8">
 
-    <main class="main-content">
+  <!-- BOARD HEADER -->
+  <div class="flex items-start justify-between mb-8 bg-white border border-gray-200 rounded-xl p-6">
 
-      <div class="board-banner">
+    <!-- LEFT -->
+    <div>
 
-        <div>
+      <h1 class="text-3xl font-bold text-gray-900">
+        <%= board.title %>
+      </h1>
 
-          <h1 class="board-title">
-            <%= board.title %>
-          </h1>
+      <p class="text-gray-500 mt-2">
+        <%= taskCount %> Tasks • Workspace: <span class="font-medium text-gray-700"><%= workspace.title %></span>
+      </p>
 
-          <p class="board-meta">
-            <%= taskCount %> Tasks • Workspace: <%= workspace.title %>
-          </p>
+    </div>
+
+    <!-- ACTIONS -->
+    <% if (permissions?.canEdit) { %>
+
+      <div class="flex gap-3">
+
+        <a href="<%= routes.board(workspace.id, board.id) %>/edit"
+           class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg font-medium transition">
+          Edit Board
+        </a>
+
+        <form action="<%= routes.board(workspace.id, board.id) %>?_method=DELETE"
+              method="POST">
+
+          <button type="submit"
+                  onclick="return confirm('Delete this board?')"
+                  class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition">
+            Delete
+          </button>
+
+        </form>
+
+      </div>
+
+    <% } %>
+
+  </div>
+
+  <!-- TASKS HEADER -->
+  <div class="flex items-center justify-between mb-6">
+
+    <h2 class="text-2xl font-bold text-gray-900">
+      Tasks
+    </h2>
+
+    <% if (permissions?.canInvite) { %>
+      <a href="<%= routes.board(workspace.id, board.id) %>/tasks/new"
+         class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-semibold transition">
+        + New Task
+      </a>
+    <% } %>
+
+  </div>
+
+  <!-- TASK GRID -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <% tasks.forEach(task => { %>
+
+      <div class="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition">
+
+        <!-- TOP -->
+        <div class="flex items-start justify-between mb-3">
+
+          <h3 class="text-lg font-bold text-gray-900">
+            <%= task.title %>
+          </h3>
+
+          <span class="text-xs px-2 py-1 rounded-full
+            <%= task.status === 'done' ? 'bg-green-100 text-green-700' :
+                task.status === 'progress' ? 'bg-yellow-100 text-yellow-700' :
+                'bg-red-100 text-red-700' %>">
+
+            <%= task.status %>
+          </span>
 
         </div>
 
-        <div class="board-actions">
+        <!-- DESCRIPTION -->
+        <p class="text-gray-500 text-sm mb-4">
+          <%= task.description || "No description" %>
+        </p>
 
-          <a href="<%= routes.board(workspace.id, board.id) %>/edit" class="secondary-btn">
-            Edit Board
+        <!-- FOOTER -->
+        <div class="flex items-center justify-between">
+
+          <span class="text-xs px-2 py-1 rounded-full
+            <%= task.priority === 'high' ? 'bg-red-100 text-red-700' :
+                task.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                'bg-blue-100 text-blue-700' %>">
+
+            <%= task.priority %>
+
+          </span>
+
+          <a href="<%= routes.task(workspace.id, board.id, task.id) %>"
+             class="text-indigo-600 font-semibold hover:text-indigo-800">
+            Open →
           </a>
-
-          <form action="<%= routes.board(workspace.id, board.id) %>?_method=DELETE" method="POST">
-
-            <button type="submit" class="danger-btn" onclick="return confirm('Delete this board?')">
-              Delete
-            </button>
-
-          </form>
 
         </div>
 
       </div>
 
-      <section class="tasks-section">
+    <% }) %>
 
-        <div class="section-header">
+  </div>
 
-          <h2>
-            Tasks
-          </h2>
+</main>
 
-          <a href="<%= routes.board(workspace.id, board.id) %>/tasks/new" class="primary-btn">
-            + New Task
-          </a>
-
-        </div>
-
-        <div class="tasks-grid">
-          <% tasks.forEach(task=> { %>
-            <div class="task-card">
-
-              <div class="task-top">
-
-                <h3>
-                  <%= task.title %>
-                </h3>
-
-                <span class="task-status status-progress">
-                  <%= task.status %>
-                </span>
-
-              </div>
-
-              <p class="task-description">
-                <%= task.description %>
-              </p>
-
-              <div class="task-footer">
-
-                <span class="task-priority <%= task.priority %>-priority">
-                  <%= task.priority %>
-                </span>
-
-                <a href="<%= routes.task(workspace.id, board.id, task.id) %>">
-                  Open →
-                </a>
-
-              </div>
-
-            </div>
-            <% }) %>
-        </div>
-
-      </section>
-
-    </main>
-
-    <%- include("../partials/footer") %>
+<%- include("../partials/footer") %>

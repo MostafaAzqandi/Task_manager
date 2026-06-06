@@ -35,7 +35,7 @@ Built with Node.js, Express, Sequelize, EJS, and MySQL.
 
 * EJS
 * Vanilla JavaScript
-* CSS
+* TailwindCSS
 
 ## Database
 
