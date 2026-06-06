@@ -39,7 +39,7 @@ Built with Node.js, Express, Sequelize, EJS, and MySQL.
 
 ## Database
 
-* SQL database with Sequelize
+* MySQL database with Sequelize
 
 ---
 
