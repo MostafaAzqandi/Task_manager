@@ -1,5 +1,7 @@
-import { Board } from "../models/index.js";
+import { Board, Task} from "../models/index.js";
 import { routes } from "../utils/routes.js";
+import { getPagination } from "../utils/pagination.js"
+
 
 class BoardController {
   async createBoard(req, res, next) {
@@ -74,17 +76,42 @@ class BoardController {
       next(error);
     }
   }
-  async getBoardPage(req, res, next) {
-    try {
-      const workspace = req.workspace;
-      const board = req.board;
-      const tasks = await board.getTasks();
-      const taskCount = await board.countTasks();
-      res.render("boards/show", { workspace, board, tasks, taskCount, routes });
-    } catch (error) {
-      next(error);
-    }
+async getBoardPage(req, res, next) {
+  try {
+
+    const workspace = req.workspace;
+    const board = req.board;
+
+    const { limit, offset, currentPage } =
+      getPagination(req.query.page, 6);
+
+    const { rows: tasks, count: taskCount } =
+      await Task.findAndCountAll({
+        where: {
+          boardId: board.id,
+        },
+        limit,
+        offset,
+        order: [["createdAt", "DESC"]],
+      });
+
+    const totalPages =
+      Math.ceil(taskCount / limit);
+
+    res.render("boards/show", {
+      workspace,
+      board,
+      tasks,
+      taskCount,
+      currentPage,
+      totalPages,
+      routes,
+    });
+
+  } catch (error) {
+    next(error);
   }
+}
   getBoardEditPage(req, res, next) {
     try {
       const workspace = req. workspace;

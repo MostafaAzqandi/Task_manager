@@ -13,105 +13,102 @@
 
 <body class="bg-gray-100 text-gray-900">
 
-<!-- NAVBAR -->
-<nav class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
+  <!-- NAVBAR -->
+  <nav class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
 
-  <!-- LOGO -->
-  <div class="text-xl font-bold text-indigo-600">
-    TaskFlow
-  </div>
+    <!-- LOGO -->
+    <div class="text-xl font-bold text-indigo-600">
+      TaskFlow
+    </div>
 
-  <!-- FLASH MESSAGES -->
-  <div class="absolute top-20 left-1/2 -translate-x-1/2 flex flex-col gap-2 z-50">
+    <!-- FLASH MESSAGES -->
+    <div class="absolute top-20 left-1/2 -translate-x-1/2 flex flex-col gap-2 z-50">
 
-    <% if(flash.error) { %>
-      <div class="bg-red-100 text-red-700 px-4 py-2 rounded-lg shadow">
-        <%= flash.error %>
-      </div>
-    <% } %>
+      <% if(flash.error) { %>
+        <div class="bg-red-100 text-red-700 px-4 py-2 rounded-lg shadow">
+          <%= flash.error %>
+        </div>
+        <% } %>
 
-    <% if(flash.success) { %>
-      <div class="bg-green-100 text-green-700 px-4 py-2 rounded-lg shadow">
-        <%= flash.success %>
-      </div>
-    <% } %>
-
-  </div>
-
-  <!-- RIGHT SIDE -->
-  <div class="flex items-center gap-4">
-
-    <% if (user) { %>
-
-      <span class="text-sm text-gray-600">
-        Welcome, <%= user.fullName %>
-      </span>
-
-      <!-- NOTIFICATIONS -->
-      <div class="relative">
-
-        <button id="notificationBtn"
-          class="relative text-2xl focus:outline-none">
-          🔔
-
-          <% const unreadCount = notifications.filter(n => !n.isRead).length; %>
-
-          <% if (unreadCount > 0) { %>
-            <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-              <%= unreadCount %>
-            </span>
-          <% } %>
-
-        </button>
-
-        <!-- POPUP -->
-        <div id="notificationPopup"
-          class="hidden absolute right-0 mt-3 w-80 max-h-96 overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-lg p-3 z-50">
-
-          <h4 class="font-semibold mb-2">Notifications</h4>
-
-          <% if (notifications.length === 0) { %>
-            <p class="text-sm text-gray-500">No notifications</p>
-          <% } %>
-
-          <% notifications.forEach(notification => { %>
-
-            <div
-              class="p-2 rounded-lg cursor-pointer mb-2
-              <%= notification.isRead ? 'bg-white' : 'bg-indigo-50' %>"
-              data-id="<%= notification.id %>">
-
-              <h5 class="font-semibold text-sm">
-                <%= notification.type %>
-              </h5>
-
-              <p class="text-sm text-gray-600">
-                <%= notification.message %>
-              </p>
-
-              <small class="text-xs text-gray-400">
-                <%= notification.createdAt.toLocaleString() %>
-              </small>
-
+          <% if(flash.success) { %>
+            <div class="bg-green-100 text-green-700 px-4 py-2 rounded-lg shadow">
+              <%= flash.success %>
             </div>
+            <% } %>
 
-          <% }) %>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="flex items-center gap-4">
+
+      <% if (user) { %>
+
+        <span class="text-sm text-gray-600">
+          Welcome, <%= user.fullName %>
+        </span>
+
+        <!-- NOTIFICATIONS -->
+        <div class="relative">
+
+          <button id="notificationBtn" class="relative text-2xl focus:outline-none">
+            🔔
+
+            <% const unreadCount=notifications.filter(n=> !n.isRead).length; %>
+
+              <% if (unreadCount> 0) { %>
+                <span data-notification-badge
+                  class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                  <%= unreadCount %>
+                </span>
+                <% } %>
+
+          </button>
+
+          <!-- POPUP -->
+          <div id="notificationPopup"
+            class="hidden absolute right-0 mt-3 w-80 max-h-96 overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-lg p-3 z-50">
+
+            <h4 class="font-semibold mb-2">Notifications</h4>
+
+            <% if (notifications.length===0) { %>
+              <p class="text-sm text-gray-500">No notifications</p>
+              <% } %>
+
+                <% notifications.forEach(notification=> { %>
+
+                  <div data-notification-item data-id="<%= notification.id %>"
+                    class="p-2 rounded-lg cursor-pointer mb-2 <%= notification.isRead ? 'bg-white' : 'bg-indigo-50' %>">
+
+                    <h5 class="font-semibold text-sm">
+                      <%= notification.type %>
+                    </h5>
+
+                    <p class="text-sm text-gray-600">
+                      <%= notification.message %>
+                    </p>
+
+                    <small class="text-xs text-gray-400">
+                      <%= notification.createdAt.toLocaleString() %>
+                    </small>
+
+                  </div>
+
+                  <% }) %>
+
+          </div>
 
         </div>
 
-      </div>
+        <!-- LOGOUT -->
+        <a href="/auth/logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm">
+          Logout
+        </a>
 
-      <!-- LOGOUT -->
-      <a href="/auth/logout"
-        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm">
-        Logout
-      </a>
+        <% } %>
 
-    <% } %>
+    </div>
 
-  </div>
+  </nav>
 
-</nav>
-
-<!-- MAIN WRAPPER -->
-<div class="flex">
+  <!-- MAIN WRAPPER -->
+  <div class="flex">

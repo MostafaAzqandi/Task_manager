@@ -1,49 +1,66 @@
-// popup toggle
+// public/js/notification.js
+
 const btn = document.getElementById("notificationBtn");
 const popup = document.getElementById("notificationPopup");
 
-btn.addEventListener("click", () => {
-  popup.classList.toggle("hidden");
+// toggle popup
+btn?.addEventListener("click", () => {
+  popup?.classList.toggle("hidden");
 });
 
+// close popup when clicking outside
 document.addEventListener("click", (e) => {
-  if (!btn.contains(e.target) && !popup.contains(e.target)) {
+  if (
+    popup &&
+    btn &&
+    !btn.contains(e.target) &&
+    !popup.contains(e.target)
+  ) {
     popup.classList.add("hidden");
   }
 });
 
-// mark as read (AJAX)
-document.querySelectorAll(".notification-item").forEach((item) => {
+// mark notification as read
+document.querySelectorAll("[data-notification-item]").forEach((item) => {
   item.addEventListener("click", async () => {
     const id = item.dataset.id;
 
-    const res = await fetch(`/notifications/${id}/read`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const res = await fetch(`/notifications/${id}/read`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (data.success) {
-      item.classList.remove("unread");
-      item.classList.add("read");
+      if (data.success) {
 
-      // update badge
-      const badge = document.querySelector(".notification-badge");
+        // update notification style
+        item.classList.remove("bg-indigo-50");
+        item.classList.add("bg-white");
 
-      if (badge) {
-        let count = parseInt(badge.innerText);
+        // update badge
+        const badge = document.querySelector(
+          "[data-notification-badge]"
+        );
 
-        count -= 1;
+        if (badge) {
+          let count = parseInt(badge.innerText);
 
-        if (count <= 0) {
-          badge.remove();
-        } else {
-          badge.innerText = count;
+          count -= 1;
+
+          if (count <= 0) {
+            badge.remove();
+          } else {
+            badge.innerText = count;
+          }
         }
       }
+
+    } catch (error) {
+      console.error(error);
     }
   });
 });
