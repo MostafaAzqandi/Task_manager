@@ -63,6 +63,13 @@ router.get(
   taskAccessMiddleware,
   TaskController.getTaskEditPage,
 );
-
+router.get(
+  "/:taskId/activities",
+  authMiddleware,
+  workspaceAccessMiddleware(),
+  boardAccessMiddleware,
+  taskAccessMiddleware,
+  TaskController.getTaskActivities,
+);
 
 export default router;

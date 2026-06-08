@@ -5,7 +5,7 @@ import {
   Task,
   TaskComment,
   ActivityLog,
-  Notification
+  Notification,
 } from "../models/index.js";
 import { logActivity } from "../utils/activityLogger.js";
 import { routes } from "../utils/routes.js";
@@ -77,29 +77,39 @@ class TaskController {
       const workspace = req.workspace;
       const users = await workspace.getUsers();
       const board = req.board;
+
+      const task = req.task;
+
+      const assignees = await task.getAssignees();
+
+      // Initial load
       const comments = await TaskComment.findAll({
-        where: {
-          taskId: req.task.id,
-        },
+        where: { taskId: task.id },
         include: {
           model: User,
           as: "author",
-        },
-        order: [["createdAt", "ASC"]],
-      });
-      const activities = await ActivityLog.findAll({
-        where: {
-          taskId: req.task.id,
-        },
-        include: {
-          model: User,
           attributes: ["id", "fullName"],
-          as: "actor",
         },
         order: [["createdAt", "DESC"]],
+        limit: 20,
+        offset: 0,
       });
-      const task = req.task;
-      const assignees = await task.getAssignees();
+
+      const activities = await ActivityLog.findAll({
+        where: { taskId: task.id },
+        include: {
+          model: User,
+          as: "actor",
+          attributes: ["id", "fullName"],
+        },
+        order: [["createdAt", "DESC"]],
+        limit: 20,
+        offset: 0,
+      });
+
+      const activityCount = await ActivityLog.count({
+        where: { taskId: task.id },
+      });
 
       res.render("tasks/show", {
         users,
@@ -108,11 +118,41 @@ class TaskController {
         task,
         assignees,
         comments,
+        activityCount,
         activities,
         routes,
       });
     } catch (error) {
       next(error);
+    }
+  }
+  async getTaskActivities(req, res, next) {
+    try {
+      const limit = 20;
+      const offset = parseInt(req.query.offset || 0);
+
+      const activities = await ActivityLog.findAll({
+        where: { taskId: req.task.id },
+        include: {
+          model: User,
+          as: "actor",
+          attributes: ["id", "fullName"],
+        },
+        order: [["createdAt", "DESC"]],
+        limit,
+        offset,
+      });
+
+      const total = await ActivityLog.count({
+        where: { taskId: req.task.id },
+      });
+
+      res.json({
+        activities,
+        hasMore: offset + limit < total,
+      });
+    } catch (err) {
+      next(err);
     }
   }
   async updateTask(req, res, next) {
@@ -127,7 +167,9 @@ class TaskController {
       ) {
         req.flash("error", "Fields are required");
 
-        return res.redirect(routes.task(req.workspace.id, req.board.id, req.task.id) + "/edit");
+        return res.redirect(
+          routes.task(req.workspace.id, req.board.id, req.task.id) + "/edit",
+        );
       }
       await req.task.update({
         title,
@@ -137,7 +179,9 @@ class TaskController {
         expireDate,
       });
       req.flash("success", "Task Updated");
-      return res.redirect(routes.task(req.workspace.id, req.board.id, req.task.id));
+      return res.redirect(
+        routes.task(req.workspace.id, req.board.id, req.task.id),
+      );
     } catch (error) {
       next(error);
     }
@@ -192,7 +236,7 @@ class TaskController {
       await Notification.create({
         userId: req.body.userId,
         type: "User assignment",
-        message: `You assigned to a task: ${req.task.title}/workspace: ${req.workspace.title}`
+        message: `You assigned to a task: ${req.task.title}/workspace: ${req.workspace.title}`,
       });
       req.flash("success", "User Assigned");
       return res.redirect(redirectToTask);

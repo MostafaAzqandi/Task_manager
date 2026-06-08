@@ -115,31 +115,29 @@
     <% }) %>
 
   </div>
-  <div class="flex items-center justify-center gap-4 mt-8">
+  <div class="flex gap-2 mt-6">
 
-  <% if (currentPage > 1) { %>
-    <a
-      href="?page=<%= currentPage - 1 %>"
-      class="px-4 py-2 bg-gray-200 rounded-lg"
-    >
-      Previous
-    </a>
-  <% } %>
+    <% if(currentPage> 1) { %>
+      <a href="?page=<%= currentPage - 1 %>">
+        Prev
+      </a>
+    <% } %>
 
-  <span class="font-semibold">
-    Page <%= currentPage %> of <%= totalPages %>
-  </span>
+    <% for(let i=Math.max(1, currentPage - 2); i <=Math.min(totalPages, currentPage + 2); i++) { %>
 
-  <% if (currentPage < totalPages) { %>
-    <a
-      href="?page=<%= currentPage + 1 %>"
-      class="px-4 py-2 bg-indigo-600 text-white rounded-lg"
-    >
-      Next
-    </a>
-  <% } %>
+      <a href="?page=<%= i %>" class="<%= currentPage === i ? 'font-bold' : '' %>">
+        <%= i %>
+      </a>
 
-</div>
+    <% } %>
+
+    <% if(currentPage < totalPages) { %>
+      <a href="?page=<%= currentPage + 1 %>">
+        Next
+      </a>
+    <% } %>
+
+  </div>
 
 </main>
 

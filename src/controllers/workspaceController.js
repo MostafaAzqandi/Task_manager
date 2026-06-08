@@ -6,9 +6,10 @@ import {
   Workspace,
   WorkspaceMember,
   Board,
-  Notification
+  Notification,
 } from "../models/index.js";
 import { routes } from "../utils/routes.js";
+import { getPagination } from "../utils/pagination.js";
 
 class WorkspaceController {
   async createWorkspace(req, res, next) {
@@ -88,39 +89,101 @@ class WorkspaceController {
       next(error);
     }
   }
-  async getWorkspacesPage(req, res, next) {
-    try {
-      const publicWorkspaces = await Workspace.findAll({
+async getWorkspacesPage(req, res, next) {
+  try {
+
+    const { limit, offset, currentPage } =
+      getPagination(req.query.page, 6);
+
+    // PUBLIC
+    const publicWorkspaces =
+      await Workspace.findAll({
+
         where: {
           visibility: "public",
         },
+
         include: [Board],
       });
 
-      const memberWorkspaces = await req.user.getWorkspaces({
+    // MEMBER
+    const memberWorkspaces =
+      await req.user.getWorkspaces({
+
         include: [Board],
+
         joinTableAttributes: ["role"],
       });
-      const map = new Map();
 
-      for (const w of [...publicWorkspaces, ...memberWorkspaces]) {
-        map.set(w.id, w);
-      }
+    const map = new Map();
 
-      const workspaces = [...map.values()];
-      res.render("workspaces/index", { workspaces });
-    } catch (error) {
-      next(error);
-    }
+    [...publicWorkspaces, ...memberWorkspaces]
+      .forEach(workspace => {
+
+        map.set(workspace.id, workspace);
+
+      });
+
+    const allWorkspaces =
+      [...map.values()];
+
+    // PAGINATION
+    const totalItems =
+      allWorkspaces.length;
+
+    const totalPages =
+      Math.ceil(totalItems / limit);
+
+    const workspaces =
+      allWorkspaces.slice(
+        offset,
+        offset + limit
+      );
+
+    res.render("workspaces/index", {
+      workspaces,
+      currentPage,
+      totalPages,
+    });
+
+  } catch (error) {
+    next(error);
   }
+}
   async getWorkspacePage(req, res, next) {
     try {
+      const { limit, offset, currentPage } = getPagination(req.query.page, 6);
+
       const workspace = req.workspace;
+
       const memberCount = await workspace.countUsers();
-      const boards = await workspace.getBoards({
+
+      const { rows: boards, count: totalBoards } = await Board.findAndCountAll({
+        where: {
+          workspaceId: workspace.id,
+        },
+
         include: [Task],
+
+        limit,
+        offset,
+
+        order: [["createdAt", "DESC"]],
+
+        distinct: true,
       });
-      res.render("workspaces/show", { workspace, boards, memberCount, routes });
+
+      const totalPages = Math.ceil(totalBoards / limit);
+
+      res.render("workspaces/show", {
+        workspace,
+        boards,
+        totalBoards,
+        memberCount,
+        currentPage,
+        totalPages,
+        routes,
+      });
     } catch (error) {
       next(error);
     }
@@ -144,8 +207,8 @@ class WorkspaceController {
     try {
       const user = await User.findOne({
         where: {
-          email: req.body.email
-        }
+          email: req.body.email,
+        },
       });
       if (!user) {
         req.flash("error", "User Not found");
@@ -154,8 +217,8 @@ class WorkspaceController {
       const existingMember = await WorkspaceMember.findOne({
         where: {
           userId: user.id,
-          workspaceId: req.workspace.id
-        }
+          workspaceId: req.workspace.id,
+        },
       });
       if (existingMember) {
         req.flash("error", "User already a member");
@@ -165,13 +228,13 @@ class WorkspaceController {
       await WorkspaceMember.create({
         workspaceId: req.workspace.id,
         userId: user.id,
-        role: "member"
+        role: "member",
       });
       await Notification.create({
         userId: user.id,
         type: "Workspace invitation",
-        message: `You are invited to workspace: ${req.workspace.title}`
-      })
+        message: `You are invited to workspace: ${req.workspace.title}`,
+      });
       req.flash("success", "User invited");
       res.redirect(routes.workspace(req.workspace.id));
     } catch (error) {
